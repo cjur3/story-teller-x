@@ -61,58 +61,64 @@ h4 {
 .pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav:hover {
   opacity: 1;
   transition: opacity 1s;
-  background-color: red;
+  background-image: url("../img/nav/arrow.png");
+  background-size: cover;
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav:hover {
   opacity: 1;
   transition: opacity 1s;
-  background-color: red;
+  background-image: url("../img/nav/arrow.png");
+  background-size: cover;
 }
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav {
   background: black;
-  z-index: 10;
-  -webkit-mask-image: url("../img/nav/arrow_in_circle_right_mask.webp");
+  -webkit-mask-image: url("../img/nav/arrow.png");
   -webkit-mask-size: 32px 32px;
   -webkit-mask-repeat: no-repeat;
-  mask-image: url("../img/nav/arrow_in_circle_right_mask.webp");
-  mask-size: 32px;
+  mask-image: url("../img/nav/arrow.png");
+  mask-size: 64px;
+  rotate: 270deg;
   mask-repeat: no-repeat;
   mask-position: center;
   position: absolute;
   opacity: 0.3;
-  height: 32px;
-  width: 32px;
-  border-style: none;
-  margin-top: auto;
-  margin-bottom: 0px;
-  margin-right: 0px;
-  margin-left: auto;
-  right: 10px;
-  bottom: 10px;
-}
-
-.pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav {
-  background: black;
-  -webkit-mask-image: url("../img/nav/arrow_in_circle_left_mask.webp");
-  -webkit-mask-size: 32px 32px;
-  -webkit-mask-repeat: no-repeat;
-  mask-image: url("../img/nav/arrow_in_circle_left_mask.webp");
-  mask-size: 32px;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  position: absolute;
-  opacity: 0.3;
-  height: 32px;
-  width: 32px;
+  height: 64px;
+  width: 64px;
   border-style: none;
   margin-top: auto;
   margin-bottom: 0px;
   margin-right: auto;
   margin-left: 0px;
-  left: 10px;
-  bottom: 10px;
+  position: absolute;
+  left: calc(100% - 45px);
+  top: calc(50% - 32px);
 }
+
+.pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav {
+  background: black;
+  -webkit-mask-image: url("../img/nav/arrow.png");
+  -webkit-mask-size: 32px 32px;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url("../img/nav/arrow.png");
+  mask-size: 64px;
+  rotate: 90deg;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  opacity: 0.3;
+  height: 64px;
+  width: 64px;
+  border-style: none;
+  margin-top: auto;
+  margin-bottom: 0px;
+  margin-right: auto;
+  margin-left: 0px;
+  position: absolute;
+  right: calc(100% - 45px);
+  top: calc(50% - 32px);
+}
+
 .app.story-sheet .journal-entry-page.pages-content .content-inner {
   padding: 6%;
   height: 100%;
@@ -234,7 +240,7 @@ nav.storyteller-nav.tabs {
   font-weight: 600;
   opacity: 0.9;
   color: #48392e;
-  height: 85%;
+  height: 93%;
   overflow-y: scroll;
 }
 

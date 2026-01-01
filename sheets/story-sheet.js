@@ -12,7 +12,7 @@ export class StorySheet extends JournalSheet {
   constructor(...args) {
     super(...args);
 
-    console.log(
+    console.debug(
       `Story Teller 2 | AppId: ${this.appId},  dataId: ${
         this.getData().data._id
       }`
@@ -92,7 +92,7 @@ export class StorySheet extends JournalSheet {
   async _render(force, options = {}) {
     this.sound();
     await super._render(force, options);
-    console.log("Story Teller 2 | Rendering Story Sheet");
+    console.debug("Story Teller 2 | Rendering Story Sheet");
 
     let data = this.getData().data;
     let storyId = data._id;
@@ -189,7 +189,7 @@ export class StorySheet extends JournalSheet {
     if (formData.img === "") {
       formData.img = this.object.data.img;
     }
-    console.log("Story Teller 2 | Updating Story Sheet");
+    console.debug("Story Teller 2 | Updating Story Sheet");
     return super._updateObject(event, formData);
   }
 
@@ -238,7 +238,7 @@ export class StorySheet extends JournalSheet {
       `.story-sheet .page-num .journal-entry-page[data-page-id="${pageId}"]`
     );
     if (!this.Pager) {
-      console.log("Story Teller 2 | Pager does not exist yet, creating");
+      console.debug("Story Teller 2 | Pager does not exist yet, creating");
       var storyId = this.getData().data._id;
       this.Pager = this.getPager(storyId, 0);
 
@@ -253,7 +253,7 @@ export class StorySheet extends JournalSheet {
 
     // since the handlebars starts at ZERO, we need to add 1 to each
     let targetPageNum = Number(targetPage.dataset.entryIndex) + 1;
-    console.log(`going to page: ${targetPageNum}, Journal Entry id: ${pageId}`);
+    console.debug(`going to page: ${targetPageNum}, Journal Entry id: ${pageId}`);
 
     this.Pager.flip(targetPageNum, "top"); //ToPage(targetPageNum);
 
