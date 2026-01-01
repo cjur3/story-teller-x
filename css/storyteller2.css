@@ -384,3 +384,13 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry
   /*background-size: 100% 100%;*/
   border: none;
 }
+
+.page-num:nth-child(2n) {
+  background: url(../img/old_book/left-page.webp);
+  background-size: cover;
+}
+
+.page-num:nth-child(2n-1) {
+  background: url(../img/old_book/right-page.webp);
+  background-size: cover;
+}
