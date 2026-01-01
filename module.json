@@ -6,7 +6,7 @@
   ],
   "compatibility": {
     "minimum": 12,
-    "verified": 12
+    "verified": 13
   },
   "description": "A small modification that allows you to present the story in the game as an open book or stack of parchment pages. Inspired by the Owlcat Pathfinder: Kingmaker game.   Based on the original works by Xbozon(https://github.com/Xbozon/storyteller) and extentions provided by Benjaneer(https://github.com/Benjaneer/storyteller-addon-singlesheet).   ",
   "esmodules": ["main.mjs"],
@@ -20,7 +20,7 @@
   ],
   "styles": ["css/storyteller2.css", "css/storyteller2-singlesheet.css"],
   "title": "StoryTeller 2",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "url": "#{URL}#",
   "manifest": "#{MANIFEST}#",
   "download": "#{DOWNLOAD}#",
