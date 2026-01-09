@@ -1,5 +1,6 @@
 import { MODULE_ID } from "../main.mjs";
 import { PageFlip } from "../scripts/pageflip/page-flip.module.mjs";
+import { HtmlPageSplitter } from '../scripts/html-pages/html-pages.js';
 
 const bookSizeCorrection = 1;
 const bookWidth = 1390;
@@ -12,11 +13,10 @@ export class StorySheet extends JournalSheet {
   constructor(...args) {
     super(...args);
 
-    console.debug(
-      `Story Teller 2 | AppId: ${this.appId},  dataId: ${
-        this.getData().data._id
-      }`
-    );
+    // console.debug(
+    //  `Story Teller 2 | AppId: ${this.appId},  dataId: ${this.getData().data._id
+    //  }`
+    //);
   }
 
   static get defaultOptions() {
@@ -92,7 +92,7 @@ export class StorySheet extends JournalSheet {
   async _render(force, options = {}) {
     this.sound();
     await super._render(force, options);
-    console.debug("Story Teller 2 | Rendering Story Sheet");
+    // console.debug("Story Teller 2 | Rendering Story Sheet");
 
     let data = this.getData().data;
     let storyId = data._id;
@@ -130,6 +130,14 @@ export class StorySheet extends JournalSheet {
       });
     });
 
+    const timeout = setTimeout(() => {
+      this.element[0].classList.add("show");
+    }, 5000);
+
+    await this.splitPages();
+    this.element[0].classList.add("show");
+    clearTimeout(timeout);
+
     this.Pager.on("flip", (e) => {
       // callback code
       var newPageNumber = e.data;
@@ -138,6 +146,68 @@ export class StorySheet extends JournalSheet {
       this.stylePageTurnButtons(newPageNumber, totalPages);
       setPage(data._id, newPageNumber);
     });
+  }
+
+  async splitPages() {
+    const textPageSize = await this.measureTextPageSize();
+    const splittingContainer = this.element[0].querySelector("#splitting-page-content");
+    const splittingPage = this.element[0].querySelector("#splitting-page");
+
+    const splitter = new HtmlPageSplitter({ container: splittingContainer });
+    const journalPages = Array.from(this.element[0].querySelectorAll(".page-num")).filter(page => page != splittingPage);
+
+    window.pager = this.Pager;
+    const parser = new DOMParser();
+
+    for (const page of journalPages) {
+      const pageType = page.dataset?.pageType;
+      if (pageType !== "text") continue;
+
+      // console.log(textPageSize, "textPageSize");
+
+      splittingContainer.style.width = `${textPageSize?.width != 0 ? textPageSize.width : 600}px`;
+      splittingContainer.style.minHeight = `${textPageSize?.height != 0 ? textPageSize.height : 900}px`;
+
+
+      page.querySelectorAll("img").forEach(img => {
+        img.style.maxWidth = "100%";
+        img.height = img.height ? Math.min(img.height, textPageSize.height) : textPageSize.height;
+        img.style.height = `${img.height}px`;
+
+        // console.log(img, "img resized");
+      });
+
+      const pages = [];
+
+      for await (const splitPage of splitter.split(page.innerHTML)) {
+        const newPage = document.createElement("div");
+        newPage.innerHTML = splitPage + '<div class="journal-page-arrow-left storyteller2-page-entry-nav prev"></div><div class="journal-page-arrow-right storyteller2-page-entry-nav next"></div>';
+
+        newPage.classList.add("page-num");
+        newPage.dataset.pageType = "text";
+        newPage.style.overflow = "hidden";
+        pages.push(newPage);
+      }
+
+      page.replaceWith(...pages);
+    }
+
+    splittingPage.remove();
+    this.Pager.updateFromHtml(this.element[0].querySelectorAll(".page-num"));
+  }
+
+  async measureTextPageSize() {
+    const measuringPage = this.element[0].querySelector("#measuring-page");
+    const measuringPageContent = this.element[0].querySelector(
+      "#measuring-page-content"
+    );
+
+    const pagesize = { width: measuringPageContent.offsetWidth, height: measuringPageContent.offsetHeight }
+
+    measuringPage.remove();
+    this.Pager.updateFromHtml(this.element[0].querySelectorAll(".page-num"));
+
+    return pagesize;
   }
 
   getPager(storyId, savedPage) {
@@ -189,7 +259,7 @@ export class StorySheet extends JournalSheet {
     if (formData.img === "") {
       formData.img = this.object.data.img;
     }
-    console.debug("Story Teller 2 | Updating Story Sheet");
+    // console.debug("Story Teller 2 | Updating Story Sheet");
     return super._updateObject(event, formData);
   }
 
@@ -238,7 +308,7 @@ export class StorySheet extends JournalSheet {
       `.story-sheet .page-num .journal-entry-page[data-page-id="${pageId}"]`
     );
     if (!this.Pager) {
-      console.debug("Story Teller 2 | Pager does not exist yet, creating");
+      // console.debug("Story Teller 2 | Pager does not exist yet, creating");
       var storyId = this.getData().data._id;
       this.Pager = this.getPager(storyId, 0);
 
@@ -253,7 +323,7 @@ export class StorySheet extends JournalSheet {
 
     // since the handlebars starts at ZERO, we need to add 1 to each
     let targetPageNum = Number(targetPage.dataset.entryIndex) + 1;
-    console.debug(`going to page: ${targetPageNum}, Journal Entry id: ${pageId}`);
+    // console.debug(`going to page: ${targetPageNum}, Journal Entry id: ${pageId}`);
 
     this.Pager.flip(targetPageNum, "top"); //ToPage(targetPageNum);
 

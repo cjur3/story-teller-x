@@ -1,38 +1,23 @@
 <div class="journal-sheet-container {{cssClass}}">
   <div class="journal-entry-pages">
-    <div id="story-{{data._id}}" class="scrollable pages">
+    <div id="story-{{data._id}}" class="pages">
       <div class="page-num num-start">
         <div class="journal-entry-page pages-content">
           <div class="content-inner">
             <form class="journal-header">
-              <input
-                class="title"
-                name="name"
-                type="text"
-                value="{{document.name}}"
-                placeholder="{{localize
-              'JOURNAL.EntryTitle'}}"
-              />
+              <input class="title" name="name" type="text" value="{{document.name}}" placeholder="{{localize
+              'JOURNAL.EntryTitle'}}" />
             </form>
 
             {{! Sidebar Pages Navigation }}
-            <nav
-              class="pages-list"
-              aria-label="{{localize 'JOURNAL.NavLabel'}}"
-              data-tooltip-direction="RIGHT"
-            >
+            <nav class="pages-list" aria-label="{{localize 'JOURNAL.NavLabel'}}" data-tooltip-direction="RIGHT">
               <ol class="directory-list scrollable">
                 {{#each toc as |page|}}
-                <li
-                  class="directory-item {{page.cssClass}}"
-                  data-page-id="{{page._id}}"
-                >
+                <li class="directory-item {{page.cssClass}}" data-page-id="{{page._id}}">
                   <div class="page-heading">
                     <span class="page-title">{{page.name}}</span>
                     {{#if page.icon}}
-                    <span class="page-ownership {{page.ownershipCls}}"
-                      ><i class="{{page.icon}}"></i
-                    ></span>
+                    <span class="page-ownership {{page.ownershipCls}}"><i class="{{page.icon}}"></i></span>
                     {{/if}}
                   </div>
                 </li>
@@ -47,30 +32,32 @@
             {{/if}}
           </div>
         </div>
-        <div
-          class="journal-page-arrow-left storyteller2-page-entry-nav prev"
-        ></div>
-        <div
-          class="journal-page-arrow-right storyteller2-page-entry-nav next"
-        ></div>
+        <div class="journal-page-arrow-left storyteller2-page-entry-nav prev"></div>
+        <div class="journal-page-arrow-right storyteller2-page-entry-nav next"></div>
       </div>
       {{#each toc as |page|}}
-      <div class="page-num {{page.number}}">
-        <article
-          class="journal-entry-page {{page.type}}"
-          data-page-id="{{page._id}}"
-          data-entry-index="{{page.number}}"
-        >
+      <div class="page-num {{page.number}}" data-page-type="{{page.type}}" data-page-number="{{page.number}}">
+        <article class="journal-entry-page {{page.type}}" data-page-id="{{page._id}}"
+          data-entry-index="{{page.number}}">
 
         </article>
-        <div
-          class="journal-page-arrow-left storyteller2-page-entry-nav prev"
-        ></div>
-        <div
-          class="journal-page-arrow-right storyteller2-page-entry-nav next"
-        ></div>
+        <div class="journal-page-arrow-left storyteller2-page-entry-nav prev"></div>
+        <div class="journal-page-arrow-right storyteller2-page-entry-nav next"></div>
       </div>
       {{/each}}
+      <div class="page-num" id="splitting-page">
+        <article class="journal-entry-page text pages-content">
+          <div id="splitting-page-content" class="splitting-page">
+
+          </div>
+        </article>
+      </div>
+      <div class="page-num" id="measuring-page">
+        <article class="journal-entry-page text pages-content">
+          <div id="measuring-page-content" style="width: 100%; height: 100%;">
+
+          </div>
+        </article>
+      </div>
     </div>
   </div>
-</div>
