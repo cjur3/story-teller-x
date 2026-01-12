@@ -152,6 +152,7 @@ export class StorySheet extends JournalSheet {
       height: jepHeight,
       size: "fixed",
       startPage: savedPage ?? 0,
+      usePortrait: false,
       useMouseEvents: false,
       showPageCorners: false,
       maxShadowOpacity: 0.9, // Half shadow intensity
