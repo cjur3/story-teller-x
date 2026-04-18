@@ -52,7 +52,7 @@ export class StorySheet extends JournalSheet {
 
     if (game.user.isGM) {
       buttons.unshift({
-        label: "STORYTELLER2.CopyID",
+        label: "StoryTeller2.CopyID",
         class: "switch-copyid",
         icon: "fas fa-crosshairs",
         onclick: (ev) => this._onCopyID(ev),
