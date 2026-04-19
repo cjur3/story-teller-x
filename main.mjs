@@ -4,7 +4,7 @@ import { SingleSheetMinimal } from "./sheets/single-sheet-minimal.js";
 import { StorySheet } from "./sheets/story-sheet.js";
 import { registerHotkeys } from "./scripts/config.js";
 
-export const MODULE_ID = "storyteller2";
+export const MODULE_ID = "story-teller-x";
 
 class StoryTeller2 {
   static SHEET_TYPES = {
