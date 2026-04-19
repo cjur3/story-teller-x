@@ -52,7 +52,7 @@ export class StorySheet extends JournalSheet {
 
     if (game.user.isGM) {
       buttons.unshift({
-        label: "STORYTELLER2.CopyID",
+        label: "StoryTeller2.CopyID",
         class: "switch-copyid",
         icon: "fas fa-crosshairs",
         onclick: (ev) => this._onCopyID(ev),
@@ -152,6 +152,7 @@ export class StorySheet extends JournalSheet {
       height: jepHeight,
       size: "fixed",
       startPage: savedPage ?? 0,
+      usePortrait: false,
       useMouseEvents: false,
       showPageCorners: false,
       maxShadowOpacity: 0.9, // Half shadow intensity
