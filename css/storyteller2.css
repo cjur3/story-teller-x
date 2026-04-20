@@ -3,7 +3,7 @@
 @import "themes/newspaper.css";
 @import "themes/fullscreen.css";
 
-.app.window-app.sheet.story-sheet + .journal-sheet.journal-entry-page {
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page {
   background: url(../img/old_book/editor.webp);
   background-size: 100% 100%;
   border: none;
@@ -12,41 +12,33 @@
   opacity: 0.9;
   color: #48392e;
 }
-.app.window-app.sheet.story-sheet + .journal-sheet.journal-entry-page .title {
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .title {
   font-family: "Kurale", serif;
   font-weight: 600;
   opacity: 0.9;
   color: #48392e;
 }
-.app.window-app.sheet.story-sheet
-  + .journal-sheet.journal-entry-page
-  .window-header,
-h4 {
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-header {
   font-family: "Kurale", serif;
   font-weight: 900;
   color: white;
 }
 
-.app.window-app.sheet.story-sheet
-  + .journal-sheet.journal-entry-page
-  aside.page-level {
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page aside.page-level {
   display: none;
 }
-.app.window-app.sheet.story-sheet
-  + .journal-sheet.journal-entry-page
-  .window-header {
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-header {
   background: none;
 }
 
-.app.window-app.sheet.story-sheet
-  + .journal-sheet.journal-entry-page
-  .window-content {
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-content {
   background: none;
 }
 
-.app.window-app.sheet.story-sheet
-  + .journal-sheet.journal-entry-page
-  .window-header {
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-header {
   background: url(../img/old_book/header_old.webp);
   /*background-size: 100% 100%;*/
   border: none;
@@ -69,6 +61,7 @@ h4 {
   transition: opacity 1s;
   background-color: red;
 }
+
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav {
   background: black;
   z-index: 10;
@@ -113,6 +106,7 @@ h4 {
   left: 10px;
   bottom: 10px;
 }
+
 .app.story-sheet .journal-entry-page.pages-content .content-inner {
   padding: 6%;
   height: 100%;
@@ -183,14 +177,14 @@ nav.storyteller-nav.tabs {
   opacity: 0;
 }
 
-.page.left > .page-inner ::-webkit-scrollbar-thumb {
+.page.left>.page-inner ::-webkit-scrollbar-thumb {
   outline: none;
   border-radius: 5px;
   border: none;
   background: #74645526;
 }
 
-.page.left > .page-inner ::-webkit-scrollbar-track {
+.page.left>.page-inner ::-webkit-scrollbar-track {
   background: transparent !important;
 }
 
@@ -214,7 +208,7 @@ nav.storyteller-nav.tabs {
 
 .story-sheet .journal-page-content,
 .story-sheet .page-num.num-start h1,
-.story-sheet .page-num.num-start .pages-list > ol {
+.story-sheet .page-num.num-start .pages-list>ol {
   font-family: "Kurale", serif;
   font-size: 1.4vh;
   font-weight: 600;
@@ -242,21 +236,22 @@ nav.storyteller-nav.tabs {
   border: none;
 }
 
-.story-sheet .page-num.num-start .pages-list > ol > li .page-title {
+.story-sheet .page-num.num-start .pages-list>ol>li .page-title {
   cursor: pointer;
 }
 
-.story-sheet .page-num.num-start .pages-list > ol > li:hover .page-title {
+.story-sheet .page-num.num-start .pages-list>ol>li:hover .page-title {
   text-shadow: 0 0 8px var(--color-shadow-primary);
 }
 
-.story-sheet .page-num.num-start .pages-list > ol {
+.story-sheet .page-num.num-start .pages-list>ol {
   font-size: 2.4vh;
 }
 
 .story-sheet .page-num.num-start .pages-list .headings {
   display: none;
 }
+
 .story-sheet .page-num.num-start .pages-list {
   overflow-y: scroll;
   height: 80%;
@@ -299,14 +294,17 @@ nav.storyteller-nav.tabs {
   padding: 1.34% 4.34% 0.34% 4.34%;
   height: 100%;
 }
+
 .story-sheet .journal-entry-page.image {
   padding: 1.34% 4.34% 0.34% 4.34%;
   height: 100%;
 }
+
 .story-sheet .journal-entry-page.video {
   padding: 1.34% 4.34% 0.34% 4.34%;
   height: 100%;
 }
+
 .story-sheet .journal-entry-page.pdf {
   padding: 1.34% 4.34% 0.34% 4.34%;
   height: 100%;
@@ -339,10 +337,7 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content {
   background: transparent !important;
 }
 
-div.app.sheet.story-sheet.journal-sheet.journal-entry
-  section.window-content
-  div.journal-sheet-container
-  section.journal-entry-content {
+div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div.journal-sheet-container section.journal-entry-content {
   background: transparent !important;
 }
 
@@ -373,9 +368,7 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry
   background: none;
 }
 
-.story-sheet
-  .window-app.sheet.journal-sheet.journal-entry-page
-  .window-content {
+.story-sheet .window-app.sheet.journal-sheet.journal-entry-page .window-content {
   background: none;
 }
 
