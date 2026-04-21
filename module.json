@@ -32,7 +32,7 @@
     "css/storyteller2-singlesheet.css"
   ],
   "title": "StoryTeller X",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "url": "#{URL}#",
   "manifest": "#{MANIFEST}#",
   "download": "#{DOWNLOAD}#",
