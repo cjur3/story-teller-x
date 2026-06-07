@@ -51,15 +51,15 @@
 }
 
 .pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav:hover {
-  opacity: 1;
-  transition: opacity 1s;
-  background-color: red;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  background: black;
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav:hover {
-  opacity: 1;
-  transition: opacity 1s;
-  background-color: red;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  background: black;
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav {
@@ -230,6 +230,8 @@ nav.storyteller-nav.tabs {
   color: #48392e;
   height: 85%;
   overflow-y: scroll;
+  padding: 0 6% 6% 6%;
+  box-sizing: border-box;
 }
 
 .story-sheet .journal-page-content img {
@@ -260,6 +262,12 @@ nav.storyteller-nav.tabs {
   color: #48392e;
   cursor: pointer;
   z-index: 100;
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.story-sheet .back-to-toc:hover {
+  opacity: 1.0;
 }
 
 .page-num.odd .back-to-toc {
