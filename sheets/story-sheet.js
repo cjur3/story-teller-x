@@ -129,7 +129,7 @@ export class StorySheet extends JournalSheet {
         for (let node of allNodes) {
             contentDiv.appendChild(node);
             
-            if (contentDiv.scrollHeight > maxHeight + 10) {
+            if (contentDiv.scrollHeight > maxHeight) {
                 contentDiv.removeChild(node);
                 
                 if (node.nodeType === 1 && node.tagName === 'P') {
@@ -140,7 +140,7 @@ export class StorySheet extends JournalSheet {
                     let childNodes = Array.from(node.childNodes);
                     for (let child of childNodes) {
                         p1.appendChild(child);
-                        if (contentDiv.scrollHeight > maxHeight + 10) {
+                        if (contentDiv.scrollHeight > maxHeight) {
                             p1.removeChild(child);
                             
                             if (child.nodeType === 3) {
@@ -152,7 +152,7 @@ export class StorySheet extends JournalSheet {
                                 for (let word of words) {
                                     currentText += word;
                                     textNode.textContent = currentText;
-                                    if (contentDiv.scrollHeight > maxHeight + 10) {
+                                    if (contentDiv.scrollHeight > maxHeight) {
                                         currentText = currentText.substring(0, currentText.length - word.length);
                                         textNode.textContent = currentText;
                                         
@@ -186,7 +186,7 @@ export class StorySheet extends JournalSheet {
                     let lis = Array.from(node.children);
                     for (let li of lis) {
                         list1.appendChild(li);
-                        if (contentDiv.scrollHeight > maxHeight + 10) {
+                        if (contentDiv.scrollHeight > maxHeight) {
                             list1.removeChild(li);
                             
                             pagesHtmlChunks.push(contentDiv.innerHTML);
