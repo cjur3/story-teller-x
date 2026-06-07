@@ -206,6 +206,15 @@ function registerSettings() {
     onChange: () => window.location.reload()
   });
 
+  game.settings.register(`${MODULE_ID}`, "hideTOCPageNumbers", {
+    name: game.i18n.localize("StoryTeller2.Settings.HideTOCPageNumbers"),
+    hint: game.i18n.localize("StoryTeller2.Settings.HideTOCPageNumbersHint"),
+    scope: "client",
+    type: Boolean,
+    default: false,
+    config: true,
+  });
+
   game.settings.register(`${MODULE_ID}`, "pages", {
     scope: "client",
     type: Object,

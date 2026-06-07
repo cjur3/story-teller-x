@@ -28,5 +28,7 @@
   "StoryTeller2.Settings.ImageFilter": "Image Filter",
   "StoryTeller2.Settings.ImageFilterHint": "Applies a CSS filter to images in the book",
   "STORYTELLER.ImporterTitle": "StoryTeller X Importer",
-  "STORYTELLER.ImporterHint": "Upload a .txt or .epub file. The text will be automatically split into paragraphs and paginated into a new StoryTeller Journal."
+  "STORYTELLER.ImporterHint": "Upload a .txt or .epub file. The text will be automatically split into paragraphs and paginated into a new StoryTeller Journal.",
+  "StoryTeller2.Settings.HideTOCPageNumbers": "Hide TOC Numbers",
+  "StoryTeller2.Settings.HideTOCPageNumbersHint": "Hides the numbers in the table of contents list."
 }

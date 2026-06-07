@@ -97,6 +97,9 @@ export class StorySheet extends JournalSheet {
     let filter = game.settings.get(MODULE_ID, "imageFilter");
     if (filter) this.element[0].classList.add(`filter-${filter}`);
 
+    let hideTOCNumbers = game.settings.get(MODULE_ID, "hideTOCPageNumbers");
+    if (hideTOCNumbers) this.element[0].classList.add(`hide-toc-numbers`);
+
     let data = this.getData().data;
     let storyId = data._id;
     let startPage = data.pages.length >= 1 ? 2 : 1;
@@ -105,6 +108,62 @@ export class StorySheet extends JournalSheet {
 
     if (savedPage > data.pages.length) {
       savedPage = data.pages.length - 1;
+    }
+
+    // Text Splitting Logic
+    let textArticles = this.element[0].querySelectorAll('article.journal-entry-page.text');
+    for (let article of textArticles) {
+      let contentDiv = article.querySelector('.journal-page-content');
+      if (contentDiv && contentDiv.scrollHeight > contentDiv.clientHeight + 10) {
+        let parentPageNum = article.closest('.page-num');
+        let lastInserted = parentPageNum;
+        let pageIndex = 1;
+        
+        let allNodes = Array.from(contentDiv.childNodes);
+        contentDiv.innerHTML = '';
+        contentDiv.style.overflowY = 'hidden';
+        
+        let currentContentDiv = contentDiv;
+        
+        for (let node of allNodes) {
+            currentContentDiv.appendChild(node);
+            
+            if (currentContentDiv.scrollHeight > currentContentDiv.clientHeight + 10) {
+                currentContentDiv.removeChild(node);
+                
+                pageIndex++;
+                let newPage = document.createElement('div');
+                let isOdd = parentPageNum.classList.contains('odd') ? (pageIndex % 2 !== 0) : (pageIndex % 2 === 0);
+                newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
+                
+                let newArticle = article.cloneNode(false);
+                let newContentDiv = contentDiv.cloneNode(false);
+                newContentDiv.style.overflowY = 'hidden';
+                
+                let backBtn = document.createElement('a');
+                backBtn.className = 'back-to-toc';
+                backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
+                backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
+                newArticle.appendChild(backBtn);
+                
+                newArticle.appendChild(newContentDiv);
+                newPage.appendChild(newArticle);
+                
+                let leftArrow = document.createElement('div');
+                leftArrow.className = "journal-page-arrow-left storyteller2-page-entry-nav prev";
+                let rightArrow = document.createElement('div');
+                rightArrow.className = "journal-page-arrow-right storyteller2-page-entry-nav next";
+                newPage.appendChild(leftArrow);
+                newPage.appendChild(rightArrow);
+
+                lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
+                lastInserted = newPage;
+                currentContentDiv = newContentDiv;
+                
+                currentContentDiv.appendChild(node);
+            }
+        }
+      }
     }
 
     this.Pager = this.getPager(storyId, savedPage);

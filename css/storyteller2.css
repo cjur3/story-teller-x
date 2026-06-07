@@ -405,6 +405,26 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
   background-size: cover;
 }
 
+.story-sheet .back-to-toc {
+  display: block;
+  position: absolute;
+  top: 1.3%;
+  left: 2%;
+  font-size: 1.5em;
+  color: #48392e;
+  cursor: pointer;
+  z-index: 100;
+}
+.page-num.odd .back-to-toc {
+  left: auto;
+  right: 2%;
+}
+
+.story-sheet.hide-toc-numbers .page-num.num-start .pages-list > ol {
+  list-style-type: none;
+  padding-left: 0;
+}
+
 /* ======================================================== */`n/* FILTERS */
 /* ======================================================== */
 .filter-sepia .journal-page-content img {
