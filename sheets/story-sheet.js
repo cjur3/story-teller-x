@@ -120,7 +120,7 @@ export class StorySheet extends JournalSheet {
         let pageIndex = 1;
         
         let allNodes = Array.from(contentDiv.childNodes);
-        let maxHeight = contentDiv.clientHeight - 30; // 30px safety margin to prevent bottom cutoff
+        let maxHeight = Math.max(100, contentDiv.clientHeight - 30); // Prevent negative heights and bottom cutoff
         contentDiv.innerHTML = '';
         contentDiv.style.overflowY = 'hidden';
         
@@ -143,6 +143,12 @@ export class StorySheet extends JournalSheet {
                         if (contentDiv.scrollHeight > maxHeight) {
                             p1.removeChild(child);
                             
+                            if (contentDiv.childNodes.length === 1 && p1.childNodes.length === 0) {
+                                // Intrinsic overflow: container itself overflows or first child overflows immediately
+                                p1.appendChild(child);
+                                continue;
+                            }
+                            
                             if (child.nodeType === 3) {
                                 let words = child.textContent.split(/(\s+)/);
                                 let currentText = "";
@@ -150,10 +156,16 @@ export class StorySheet extends JournalSheet {
                                 p1.appendChild(textNode);
                                 
                                 for (let word of words) {
+                                    let prevText = currentText;
                                     currentText += word;
                                     textNode.textContent = currentText;
                                     if (contentDiv.scrollHeight > maxHeight) {
-                                        currentText = currentText.substring(0, currentText.length - word.length);
+                                        if (prevText.trim() === "" && contentDiv.childNodes.length === 1 && p1.childNodes.length === 1) {
+                                            // Very first word overflows immediately, force it to stay
+                                            continue;
+                                        }
+                                        
+                                        currentText = prevText;
                                         textNode.textContent = currentText;
                                         
                                         pagesHtmlChunks.push(contentDiv.innerHTML);
@@ -179,8 +191,10 @@ export class StorySheet extends JournalSheet {
                         }
                     }
                 } else {
-                    pagesHtmlChunks.push(contentDiv.innerHTML);
-                    contentDiv.innerHTML = '';
+                    if (contentDiv.childNodes.length > 0) {
+                        pagesHtmlChunks.push(contentDiv.innerHTML);
+                        contentDiv.innerHTML = '';
+                    }
                     contentDiv.appendChild(node);
                 }
             }
