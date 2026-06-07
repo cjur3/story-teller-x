@@ -94,11 +94,77 @@ export class StorySheet extends JournalSheet {
     await super._render(force, options);
     console.log("Story Teller 2 | Rendering Story Sheet");
 
+    let theme = game.settings.get(MODULE_ID, "theme");
+    let filter = game.settings.get(MODULE_ID, "imageFilter");
+    this.element[0].classList.add(`theme-${theme}`);
+    this.element[0].classList.add(`filter-${filter}`);
+    if (theme !== "default") {
+        this.element[0].classList.add("immersive-controls"); // Optionally use immersive controls logic tied to theme
+    }
+    // We will always add immersive-controls class to hide the old arrows since useMouseEvents is now true.
+    this.element[0].classList.add("immersive-controls");
+
     let data = this.getData().data;
     let storyId = data._id;
     let startPage = data.pages.length >= 1 ? 2 : 1;
 
     let savedPage = getPage(data._id) ?? 0;
+
+    // Text Splitting Logic
+    let textArticles = this.element[0].querySelectorAll('article.journal-entry-page.text');
+    for (let article of textArticles) {
+      let contentDiv = article.querySelector('.journal-page-content');
+      if (contentDiv && contentDiv.scrollHeight > contentDiv.clientHeight + 10) {
+        let parentPageNum = article.closest('.page-num');
+        let lastInserted = parentPageNum;
+        let pageIndex = 1;
+        
+        let allNodes = Array.from(contentDiv.childNodes);
+        contentDiv.innerHTML = '';
+        contentDiv.style.overflowY = 'hidden';
+        
+        let currentContentDiv = contentDiv;
+        
+        for (let node of allNodes) {
+            currentContentDiv.appendChild(node);
+            
+            if (currentContentDiv.scrollHeight > currentContentDiv.clientHeight + 10) {
+                currentContentDiv.removeChild(node);
+                
+                pageIndex++;
+                let newPage = document.createElement('div');
+                let isOdd = parentPageNum.classList.contains('odd') ? (pageIndex % 2 !== 0) : (pageIndex % 2 === 0);
+                newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
+                
+                let newArticle = article.cloneNode(false);
+                let newContentDiv = contentDiv.cloneNode(false);
+                newContentDiv.style.overflowY = 'hidden';
+                
+                let backBtn = document.createElement('a');
+                backBtn.className = 'back-to-toc';
+                backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
+                backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
+                newArticle.appendChild(backBtn);
+                
+                newArticle.appendChild(newContentDiv);
+                newPage.appendChild(newArticle);
+                
+                let leftArrow = document.createElement('div');
+                leftArrow.className = "journal-page-arrow-left storyteller2-page-entry-nav prev";
+                let rightArrow = document.createElement('div');
+                rightArrow.className = "journal-page-arrow-right storyteller2-page-entry-nav next";
+                newPage.appendChild(leftArrow);
+                newPage.appendChild(rightArrow);
+
+                lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
+                lastInserted = newPage;
+                currentContentDiv = newContentDiv;
+                
+                currentContentDiv.appendChild(node);
+            }
+        }
+      }
+    }
 
     // PDF Splitting Logic
     let pdfArticles = this.element[0].querySelectorAll('article.journal-entry-page.pdf');
@@ -215,8 +281,8 @@ export class StorySheet extends JournalSheet {
       size: "fixed",
       startPage: savedPage ?? 0,
       usePortrait: false,
-      useMouseEvents: false,
-      showPageCorners: false,
+      useMouseEvents: true,
+      showPageCorners: true,
       maxShadowOpacity: 0.9, // Half shadow intensity
       showCover: true,
       clickEventClasses: [

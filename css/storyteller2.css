@@ -404,3 +404,79 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
   background: url(../img/old_book/right-page.webp);
   background-size: cover;
 }
+
+/* ======================================================== */
+/* THEMES */
+/* ======================================================== */
+
+/* Demonic Theme */
+.theme-demonic .story-sheet:before {
+  background: url(../img/demonic/book.png);
+  background-size: cover;
+}
+.theme-demonic .page-num:nth-child(2n) {
+  background: url(../img/demonic/page.png);
+  background-size: cover;
+}
+.theme-demonic .page-num:nth-child(2n-1) {
+  background: url(../img/demonic/page.png);
+  background-size: cover;
+  transform: scaleX(-1); /* Mirror for right page */
+}
+.theme-demonic .journal-page-content {
+  color: #d1b4b4; /* Lighter text for dark pages */
+  text-shadow: 1px 1px 2px #000;
+}
+.theme-demonic .journal-page-content h1,
+.theme-demonic .journal-page-content h2,
+.theme-demonic .journal-page-content h3 {
+  color: #ff5555;
+  border-bottom-color: #551111;
+}
+
+/* Fairy Tale Theme */
+.theme-fairytale .story-sheet:before {
+  background: url(../img/fairytale/book.png);
+  background-size: cover;
+}
+.theme-fairytale .page-num:nth-child(2n) {
+  background: url(../img/fairytale/page.png);
+  background-size: cover;
+}
+.theme-fairytale .page-num:nth-child(2n-1) {
+  background: url(../img/fairytale/page.png);
+  background-size: cover;
+  transform: scaleX(-1);
+}
+.theme-fairytale .journal-page-content {
+  color: #4a2c6d;
+}
+.theme-fairytale .journal-page-content h1,
+.theme-fairytale .journal-page-content h2,
+.theme-fairytale .journal-page-content h3 {
+  color: #b580d1;
+  border-bottom-color: #d1c0e5;
+}
+
+/* ======================================================== */
+/* FILTERS */
+/* ======================================================== */
+.filter-sepia .journal-page-content img {
+  filter: sepia(0.8) contrast(1.2);
+  mix-blend-mode: multiply;
+}
+.filter-grayscale .journal-page-content img {
+  filter: grayscale(1) contrast(1.2);
+  mix-blend-mode: multiply;
+}
+.filter-invert .journal-page-content img {
+  filter: invert(0.9) hue-rotate(180deg);
+  mix-blend-mode: screen;
+}
+
+/* ======================================================== */
+/* IMMERSIVE CONTROLS */
+/* ======================================================== */
+.immersive-controls .storyteller2-page-entry-nav {
+  display: none !important;
+}
