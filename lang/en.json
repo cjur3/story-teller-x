@@ -21,5 +21,8 @@
   "StoryTeller2.Settings.Size": "The size of the story on the screen",
   "StoryTeller2.Settings.SizeHint": "100% takes up almost the entire screen height, 80% takes up no more than 80% of the screen height",
   "StoryTeller2.Settings.BookOpenSound": "Enable book opening sound",
-  "StoryTeller2.Settings.BookOpenSoundHint": "For each user individually"
+  "StoryTeller2.Settings.BookOpenSoundHint": "For each user individually",
+  "StoryTeller2.Settings.PageTurnSound": "Enable page turn sound",
+  "StoryTeller2.Settings.PageTurnSoundHint": "For each user individually",
+  "STORYTELLER.BackToTOC": "Back to Table of Contents"
 }

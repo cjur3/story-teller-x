@@ -157,6 +157,15 @@ function registerSettings() {
     config: true,
   });
 
+  game.settings.register(`${MODULE_ID}`, "pageTurnSound", {
+    name: game.i18n.localize("StoryTeller2.Settings.PageTurnSound"),
+    hint: game.i18n.localize("StoryTeller2.Settings.PageTurnSoundHint"),
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
   game.settings.register(`${MODULE_ID}`, "pages", {
     scope: "client",
     type: Object,

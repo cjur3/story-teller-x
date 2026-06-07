@@ -99,8 +99,51 @@ export class StorySheet extends JournalSheet {
     let startPage = data.pages.length >= 1 ? 2 : 1;
 
     let savedPage = getPage(data._id) ?? 0;
-    if (savedPage > data.pages.length) {
-      savedPage = data.pages.length - 1;
+
+    // PDF Splitting Logic
+    let pdfArticles = this.element[0].querySelectorAll('article.journal-entry-page.pdf');
+    for (let article of pdfArticles) {
+      let iframe = article.querySelector('iframe');
+      if (iframe) {
+        let srcBase = iframe.src.split('#')[0];
+        
+        await new Promise((resolve) => {
+          let attempts = 0;
+          let checkInterval = setInterval(() => {
+            attempts++;
+            if (iframe.contentWindow && iframe.contentWindow.PDFViewerApplication && iframe.contentWindow.PDFViewerApplication.pagesCount > 0) {
+              clearInterval(checkInterval);
+              resolve();
+            } else if (attempts > 100) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 50);
+        });
+        
+        let numPages = iframe.contentWindow?.PDFViewerApplication?.pagesCount || 1;
+        if (numPages > 1) {
+          let parentPageNum = article.closest('.page-num');
+          iframe.src = srcBase + '#page=1';
+          
+          let lastInserted = parentPageNum;
+          for (let i = 2; i <= numPages; i++) {
+            let newPage = document.createElement('div');
+            let isOdd = parentPageNum.classList.contains('odd') ? (i % 2 !== 0) : (i % 2 === 0);
+            newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
+            newPage.innerHTML = `
+              <article class="journal-entry-page pdf" data-page-id="${article.dataset.pageId}" data-entry-index="${article.dataset.entryIndex}">
+                <a class="back-to-toc" title="${game.i18n.localize('STORYTELLER.BackToTOC')}"><i class="fas fa-book-open"></i></a>
+                <iframe src="${srcBase}#page=${i}" style="width: 100%; height: 100%; border: none;"></iframe>
+              </article>
+              <div class="journal-page-arrow-left storyteller2-page-entry-nav prev"></div>
+              <div class="journal-page-arrow-right storyteller2-page-entry-nav next"></div>
+            `;
+            lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
+            lastInserted = newPage;
+          }
+        }
+      }
     }
 
     this.Pager = this.getPager(storyId, savedPage);
@@ -113,6 +156,13 @@ export class StorySheet extends JournalSheet {
 
     var totalPages = this.Pager.pages.pages.length;
     this.stylePageTurnButtons(savedPage, totalPages);
+
+    var backToTocBtns = this.element[0].querySelectorAll(".back-to-toc");
+    backToTocBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        this.goToPage(0);
+      });
+    });
 
     var journalEntries = this.element[0].querySelectorAll(
       ".page-num.num-start ol li.level1"
@@ -137,6 +187,18 @@ export class StorySheet extends JournalSheet {
 
       this.stylePageTurnButtons(newPageNumber, totalPages);
       setPage(data._id, newPageNumber);
+
+      if (game.settings.get(`${MODULE_ID}`, "pageTurnSound")) {
+        foundry.audio.AudioHelper.play(
+          {
+            src: this.pageFlipSoundURL,
+            volume: 0.8,
+            autoplay: true,
+            loop: false,
+          },
+          false
+        );
+      }
     });
   }
 
