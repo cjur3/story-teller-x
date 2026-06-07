@@ -1,0 +1,104 @@
+.single-sheet.minimal section.window-content .page-num {
+  /*.turn-page*/
+  background-image: url("../img/clean.webp");
+  background-image: url("../img/minimal.webp");
+  background-image: url("../img/very-little.webp");
+  background-size: 100% 100%;
+  width: 100% !important;
+  height: 100% !important;
+  direction: ltr;
+}
+
+.single-sheet .journal-page-arrow-right {
+  display: none;
+}
+
+.single-sheet .journal-page-arrow-left {
+  display: none;
+}
+
+.single-sheet .page-num .journal-page-arrow-right:hover {
+  opacity: 1;
+  transition: opacity 1s;
+  background-color: red;
+}
+
+.single-sheet .page-num .journal-page-arrow-left:hover {
+  opacity: 1;
+  transition: opacity 1s;
+  background-color: red;
+}
+
+.single-sheet .page-num .journal-page-arrow-right {
+  background: black;
+  -webkit-mask-image: url("../img/arrow_in_circle_right_mask.png");
+  -webkit-mask-size: 32px 32px;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url("../img/arrow_in_circle_right_mask.webp");
+  mask-size: 32px;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  opacity: 0.3;
+  height: 32px;
+  width: 32px;
+  border-style: none;
+  margin-top: auto;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: auto;
+  right: 0;
+}
+
+.single-sheet .page-num .journal-page-arrow-left {
+  background: black;
+  -webkit-mask-image: url("../img/arrow_in_circle_left_mask.png");
+  -webkit-mask-size: 32px 32px;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url("../img/arrow_in_circle_left_mask.webp");
+  mask-size: 32px;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  opacity: 0.3;
+  height: 32px;
+  width: 32px;
+  border-style: none;
+  margin-top: auto;
+  margin-bottom: 10px;
+  margin-right: auto;
+  margin-left: 10px;
+}
+
+.single-sheet.minimal .editor-edit {
+  margin-top: 2%;
+  margin-right: 1%;
+}
+
+.single-sheet.minimal .journal-page-header h1 {
+  padding: 3% 3% 0% 3%;
+  font-family: La Belle Aurore;
+  font-weight: bold;
+  font-size: 1.7em;
+}
+
+.single-sheet.minimal .journal-page-header h1::after {
+}
+
+.single-sheet.minimal .journal-page-content {
+  padding: 0% 3% 3% 3%;
+}
+
+.single-sheet.minimal .story-settings {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+
+.single-sheet.minimal .page-num .journal-entry-page {
+  -webkit-mask-image: url("../img/clean_mask.webp");
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  height: 95%;
+}

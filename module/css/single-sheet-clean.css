@@ -1,0 +1,50 @@
+
+.single-sheet.clean section.window-content .page-num  { /*.turn-page*/
+    background-image: url("../img/clean.webp");
+	background-image: url("../img/minimal.webp");
+	background-image: url("../img/very-little.webp");
+    background-size: 100% 100%;
+    direction: ltr;
+	
+}
+
+.single-sheet.clean .page-wrapper .editor-edit
+{
+	margin-top: 2%;
+	margin-right: 1%;
+}
+
+.single-sheet.clean .page-wrapper .journal-page-header h1
+{
+	padding: 3% 3% 0% 3%;
+	font-family:La Belle Aurore;
+	font-weight: bold;
+	font-size: 1.7em;
+}
+
+
+
+
+.single-sheet.clean .page-wrapper .journal-page-header h1::after {
+
+}
+
+.single-sheet.clean .page-wrapper .journal-page-content
+{
+	padding: 0% 3% 3% 3%;
+}
+
+
+
+.single-sheet.clean .story-settings {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+}
+
+.single-sheet.clean .page-num .journal-entry-page {
+    -webkit-mask-image: url("../img/clean_mask.webp");
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
