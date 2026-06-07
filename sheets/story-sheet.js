@@ -94,15 +94,8 @@ export class StorySheet extends JournalSheet {
     await super._render(force, options);
     console.log("Story Teller 2 | Rendering Story Sheet");
 
-    let theme = game.settings.get(MODULE_ID, "theme");
     let filter = game.settings.get(MODULE_ID, "imageFilter");
-    this.element[0].classList.add(`theme-${theme}`);
-    this.element[0].classList.add(`filter-${filter}`);
-    if (theme !== "default") {
-        this.element[0].classList.add("immersive-controls"); // Optionally use immersive controls logic tied to theme
-    }
-    // We will always add immersive-controls class to hide the old arrows since useMouseEvents is now true.
-    this.element[0].classList.add("immersive-controls");
+    if (filter) this.element[0].classList.add(`filter-${filter}`);
 
     let data = this.getData().data;
     let storyId = data._id;
@@ -110,106 +103,8 @@ export class StorySheet extends JournalSheet {
 
     let savedPage = getPage(data._id) ?? 0;
 
-    // Text Splitting Logic
-    let textArticles = this.element[0].querySelectorAll('article.journal-entry-page.text');
-    for (let article of textArticles) {
-      let contentDiv = article.querySelector('.journal-page-content');
-      if (contentDiv && contentDiv.scrollHeight > contentDiv.clientHeight + 10) {
-        let parentPageNum = article.closest('.page-num');
-        let lastInserted = parentPageNum;
-        let pageIndex = 1;
-        
-        let allNodes = Array.from(contentDiv.childNodes);
-        contentDiv.innerHTML = '';
-        contentDiv.style.overflowY = 'hidden';
-        
-        let currentContentDiv = contentDiv;
-        
-        for (let node of allNodes) {
-            currentContentDiv.appendChild(node);
-            
-            if (currentContentDiv.scrollHeight > currentContentDiv.clientHeight + 10) {
-                currentContentDiv.removeChild(node);
-                
-                pageIndex++;
-                let newPage = document.createElement('div');
-                let isOdd = parentPageNum.classList.contains('odd') ? (pageIndex % 2 !== 0) : (pageIndex % 2 === 0);
-                newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
-                
-                let newArticle = article.cloneNode(false);
-                let newContentDiv = contentDiv.cloneNode(false);
-                newContentDiv.style.overflowY = 'hidden';
-                
-                let backBtn = document.createElement('a');
-                backBtn.className = 'back-to-toc';
-                backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
-                backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
-                newArticle.appendChild(backBtn);
-                
-                newArticle.appendChild(newContentDiv);
-                newPage.appendChild(newArticle);
-                
-                let leftArrow = document.createElement('div');
-                leftArrow.className = "journal-page-arrow-left storyteller2-page-entry-nav prev";
-                let rightArrow = document.createElement('div');
-                rightArrow.className = "journal-page-arrow-right storyteller2-page-entry-nav next";
-                newPage.appendChild(leftArrow);
-                newPage.appendChild(rightArrow);
-
-                lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
-                lastInserted = newPage;
-                currentContentDiv = newContentDiv;
-                
-                currentContentDiv.appendChild(node);
-            }
-        }
-      }
-    }
-
-    // PDF Splitting Logic
-    let pdfArticles = this.element[0].querySelectorAll('article.journal-entry-page.pdf');
-    for (let article of pdfArticles) {
-      let iframe = article.querySelector('iframe');
-      if (iframe) {
-        let srcBase = iframe.src.split('#')[0];
-        
-        await new Promise((resolve) => {
-          let attempts = 0;
-          let checkInterval = setInterval(() => {
-            attempts++;
-            if (iframe.contentWindow && iframe.contentWindow.PDFViewerApplication && iframe.contentWindow.PDFViewerApplication.pagesCount > 0) {
-              clearInterval(checkInterval);
-              resolve();
-            } else if (attempts > 100) {
-              clearInterval(checkInterval);
-              resolve();
-            }
-          }, 50);
-        });
-        
-        let numPages = iframe.contentWindow?.PDFViewerApplication?.pagesCount || 1;
-        if (numPages > 1) {
-          let parentPageNum = article.closest('.page-num');
-          iframe.src = srcBase + '#page=1';
-          
-          let lastInserted = parentPageNum;
-          for (let i = 2; i <= numPages; i++) {
-            let newPage = document.createElement('div');
-            let isOdd = parentPageNum.classList.contains('odd') ? (i % 2 !== 0) : (i % 2 === 0);
-            newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
-            newPage.innerHTML = `
-              <article class="journal-entry-page pdf" data-page-id="${article.dataset.pageId}" data-entry-index="${article.dataset.entryIndex}">
-                <a class="back-to-toc" title="${game.i18n.localize('STORYTELLER.BackToTOC')}"><i class="fas fa-book-open"></i></a>
-                <iframe src="${srcBase}#page=${i}" style="width: 100%; height: 100%; border: none;"></iframe>
-              </article>
-              <div class="journal-page-arrow-left storyteller2-page-entry-nav prev"></div>
-              <div class="journal-page-arrow-right storyteller2-page-entry-nav next"></div>
-            `;
-            lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
-            lastInserted = newPage;
-          }
-        }
-      }
+    if (savedPage > data.pages.length) {
+      savedPage = data.pages.length - 1;
     }
 
     this.Pager = this.getPager(storyId, savedPage);
@@ -281,13 +176,14 @@ export class StorySheet extends JournalSheet {
       size: "fixed",
       startPage: savedPage ?? 0,
       usePortrait: false,
-      useMouseEvents: true,
-      showPageCorners: true,
+      useMouseEvents: false,
+      showPageCorners: false,
       maxShadowOpacity: 0.9, // Half shadow intensity
       showCover: true,
       clickEventClasses: [
+        "editor-edit",
         "storyteller2-page-entry-nav",
-        "journal-entry-pages-nav",
+        "back-to-toc"
       ],
     });
   }

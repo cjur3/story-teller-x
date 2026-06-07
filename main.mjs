@@ -231,3 +231,4 @@ Handlebars.registerHelper("getDontOpen", function () {
 });
 
 export const SHEET_TYPES = Array.from(Object.values(StoryTeller2.SHEET_TYPES));
+

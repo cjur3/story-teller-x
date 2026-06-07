@@ -25,8 +25,6 @@
   "StoryTeller2.Settings.PageTurnSound": "Enable page turn sound",
   "StoryTeller2.Settings.PageTurnSoundHint": "For each user individually",
   "STORYTELLER.BackToTOC": "Back to Table of Contents",
-  "StoryTeller2.Settings.ThemeDemonic": "Demonic Book",
-  "StoryTeller2.Settings.ThemeFairyTale": "Fairy Tale Book",
   "StoryTeller2.Settings.ImageFilter": "Image Filter",
   "StoryTeller2.Settings.ImageFilterHint": "Applies a CSS filter to images in the book",
   "STORYTELLER.ImporterTitle": "StoryTeller X Importer",
