@@ -119,6 +119,33 @@ Hooks.on("ready", () => {
   });
 
   console.log("Story Teller 2 Journal | Ready");
+
+  let pdfChoices = { "default": "Default" };
+  for (let s of Object.values(CONFIG.JournalEntry.sheetClasses.base || {})) {
+    if (s.id !== "story-teller-x.StorySheet") {
+      pdfChoices[s.id] = s.label;
+    }
+  }
+  let setting = game.settings.settings.get(`${MODULE_ID}.pdfSheet`);
+  if (setting) {
+    setting.choices = pdfChoices;
+  }
+
+  const originalGetSheetClass = CONFIG.JournalEntry.documentClass.prototype._getSheetClass;
+  CONFIG.JournalEntry.documentClass.prototype._getSheetClass = function() {
+    let sheetClass = originalGetSheetClass.call(this);
+
+    const hasPDF = this.pages.some(p => p.type === "pdf");
+    if (hasPDF) {
+      const customPdfSheet = game.settings.get(MODULE_ID, "pdfSheet");
+      if (customPdfSheet && customPdfSheet !== "default") {
+        const overrideSheet = CONFIG.JournalEntry.sheetClasses.base[customPdfSheet];
+        if (overrideSheet) return overrideSheet.cls;
+      }
+    }
+
+    return sheetClass;
+  };
 });
 
 Hooks.on("init", () => {
@@ -207,6 +234,18 @@ function registerSettings() {
     type: Object,
     default: {},
     config: false,
+  });
+
+  game.settings.register(`${MODULE_ID}`, "pdfSheet", {
+    name: game.i18n.localize("StoryTeller2.Settings.PdfSheet"),
+    hint: game.i18n.localize("StoryTeller2.Settings.PdfSheetHint"),
+    scope: "client",
+    config: true,
+    type: String,
+    choices: {
+      "default": "Default",
+    },
+    default: "default",
   });
 }
 
