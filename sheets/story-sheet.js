@@ -179,8 +179,10 @@ export class StorySheet extends JournalSheet {
 
     var backToTocBtns = this.element[0].querySelectorAll(".back-to-toc");
     backToTocBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        this.goToPage(0);
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.Pager.turnToPage(0);
       });
     });
 

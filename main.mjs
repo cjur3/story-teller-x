@@ -175,20 +175,7 @@ function registerSettings() {
     config: true,
   });
 
-  game.settings.register(`${MODULE_ID}`, "theme", {
-    name: game.i18n.localize("StoryTeller2.Settings.Theme"),
-    hint: game.i18n.localize("StoryTeller2.Settings.ThemeHint"),
-    scope: "world",
-    config: true,
-    type: String,
-    choices: {
-      "default": "Default Book",
-      "demonic": game.i18n.localize("StoryTeller2.Settings.ThemeDemonic"),
-      "fairytale": game.i18n.localize("StoryTeller2.Settings.ThemeFairyTale"),
-    },
-    default: "default",
-    onChange: () => window.location.reload()
-  });
+
 
   game.settings.register(`${MODULE_ID}`, "imageFilter", {
     name: game.i18n.localize("StoryTeller2.Settings.ImageFilter"),
