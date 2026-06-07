@@ -111,10 +111,22 @@ export class StorySheet extends JournalSheet {
     }
 
     // Text Splitting Logic
-    let textArticles = this.element[0].querySelectorAll('article.journal-entry-page.text');
-    for (let article of textArticles) {
-      let contentDiv = article.querySelector('.journal-page-content');
-      if (contentDiv && contentDiv.scrollHeight > contentDiv.clientHeight + 10) {
+    try {
+      var journalEntryPages = this.element[0].querySelector(".journal-entry-pages");
+      var jepHeight = journalEntryPages.offsetHeight;
+      var jepWidth = journalEntryPages.offsetWidth / 2;
+
+      let allPages = this.element[0].querySelectorAll('.page-num');
+      for (let p of allPages) {
+          p.style.width = jepWidth + 'px';
+          p.style.height = jepHeight + 'px';
+          p.style.position = 'absolute';
+      }
+
+      let textArticles = this.element[0].querySelectorAll('article.journal-entry-page.text');
+      for (let article of textArticles) {
+        let contentDiv = article.querySelector('.journal-page-content');
+        if (contentDiv && contentDiv.scrollHeight > contentDiv.clientHeight + 10) {
         let parentPageNum = article.closest('.page-num');
         let lastInserted = parentPageNum;
         let pageIndex = 1;
@@ -122,84 +134,133 @@ export class StorySheet extends JournalSheet {
         let allNodes = Array.from(contentDiv.childNodes);
         let maxHeight = Math.max(100, contentDiv.clientHeight - 30); // Prevent negative heights and bottom cutoff
         contentDiv.innerHTML = '';
-        contentDiv.style.overflowY = 'hidden';
+        // contentDiv.style.overflowY = 'hidden'; // Removed to allow scrolling if text overflows
         
         let pagesHtmlChunks = [];
         
-        for (let node of allNodes) {
-            contentDiv.appendChild(node);
+        let activeStack = [];
+        let hasAddedContentToPage = false;
+
+        const pushPageAndRebuildStack = () => {
+            if (hasAddedContentToPage || contentDiv.childNodes.length > 0) {
+                pagesHtmlChunks.push(contentDiv.innerHTML);
+            }
+            contentDiv.innerHTML = '';
+            hasAddedContentToPage = false;
+            
+            let current = contentDiv;
+            for (let layer of activeStack) {
+                let clone = document.createElement(layer.tagName);
+                layer.attributes.forEach(attr => clone.setAttribute(attr.name, attr.value));
+                current.appendChild(clone);
+                layer.elementRef = clone;
+                current = clone;
+            }
+        };
+
+        const isUnsplittable = (n) => n.nodeType === 1 && ['IMG', 'IFRAME', 'TABLE', 'TR', 'TD', 'TH', 'HR'].includes(n.tagName);
+
+        const processNode = (node) => {
+            let container = activeStack.length > 0 ? activeStack[activeStack.length - 1].elementRef : contentDiv;
+            
+            if (node.nodeType === 1 && !isUnsplittable(node)) {
+                let layer = {
+                    tagName: node.tagName,
+                    attributes: Array.from(node.attributes),
+                    elementRef: null
+                };
+                let clone = document.createElement(layer.tagName);
+                layer.attributes.forEach(attr => clone.setAttribute(attr.name, attr.value));
+                container.appendChild(clone);
+                layer.elementRef = clone;
+                activeStack.push(layer);
+                
+                let children = Array.from(node.childNodes);
+                for (let child of children) {
+                    processNode(child);
+                }
+                
+                activeStack.pop();
+                let currentClone = layer.elementRef;
+                if (currentClone && currentClone.childNodes.length === 0 && currentClone.parentNode) {
+                    currentClone.parentNode.removeChild(currentClone);
+                }
+                return;
+            }
+            
+            container.appendChild(node);
             
             if (contentDiv.scrollHeight > maxHeight) {
-                contentDiv.removeChild(node);
+                container.removeChild(node);
                 
-                if (node.nodeType === 1 && !['IMG', 'IFRAME', 'TABLE', 'TR', 'TD', 'TH', 'HR'].includes(node.tagName)) {
-                    let p1 = document.createElement(node.tagName);
-                    Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
-                    contentDiv.appendChild(p1);
-                    
-                    let childNodes = Array.from(node.childNodes);
-                    for (let child of childNodes) {
-                        p1.appendChild(child);
-                        if (contentDiv.scrollHeight > maxHeight) {
-                            p1.removeChild(child);
-                            
-                            if (contentDiv.childNodes.length === 1 && p1.childNodes.length === 0) {
-                                // Intrinsic overflow: container itself overflows or first child overflows immediately
-                                p1.appendChild(child);
+                if (node.nodeType === 3) {
+                    let words = node.textContent.split(/(\s+)/);
+                    while (words.length > 0) {
+                        container = activeStack.length > 0 ? activeStack[activeStack.length - 1].elementRef : contentDiv;
+                        let textNode = document.createTextNode("");
+                        container.appendChild(textNode);
+                        
+                        let low = 1; let high = words.length; let bestFit = 0;
+                        textNode.textContent = words.join('');
+                        
+                        if (contentDiv.scrollHeight <= maxHeight) {
+                            bestFit = words.length;
+                        } else {
+                            while (low <= high) {
+                                let mid = Math.floor((low + high) / 2);
+                                textNode.textContent = words.slice(0, mid).join('');
+                                if (contentDiv.scrollHeight > maxHeight) {
+                                    high = mid - 1;
+                                } else {
+                                    bestFit = mid;
+                                    low = mid + 1;
+                                }
+                            }
+                        }
+                        
+                        if (bestFit === 0) {
+                            if (!hasAddedContentToPage) {
+                                bestFit = 1;
+                            } else {
+                                container.removeChild(textNode);
+                                pushPageAndRebuildStack();
                                 continue;
                             }
-                            
-                            if (child.nodeType === 3) {
-                                let words = child.textContent.split(/(\s+)/);
-                                let currentText = "";
-                                let textNode = document.createTextNode("");
-                                p1.appendChild(textNode);
-                                
-                                for (let word of words) {
-                                    let prevText = currentText;
-                                    currentText += word;
-                                    textNode.textContent = currentText;
-                                    if (contentDiv.scrollHeight > maxHeight) {
-                                        if (prevText.trim() === "" && contentDiv.childNodes.length === 1 && p1.childNodes.length === 1) {
-                                            // Very first word overflows immediately, force it to stay
-                                            continue;
-                                        }
-                                        
-                                        currentText = prevText;
-                                        textNode.textContent = currentText;
-                                        
-                                        pagesHtmlChunks.push(contentDiv.innerHTML);
-                                        contentDiv.innerHTML = '';
-                                        
-                                        p1 = document.createElement(node.tagName);
-                                        Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
-                                        contentDiv.appendChild(p1);
-                                        currentText = word;
-                                        textNode = document.createTextNode(currentText);
-                                        p1.appendChild(textNode);
-                                    }
-                                }
-                            } else {
-                                pagesHtmlChunks.push(contentDiv.innerHTML);
-                                contentDiv.innerHTML = '';
-                                
-                                p1 = document.createElement(node.tagName);
-                                Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
-                                contentDiv.appendChild(p1);
-                                p1.appendChild(child);
-                            }
+                        }
+                        
+                        textNode.textContent = words.slice(0, bestFit).join('');
+                        words = words.slice(bestFit);
+                        hasAddedContentToPage = true;
+                        
+                        if (words.length > 0) {
+                            pushPageAndRebuildStack();
                         }
                     }
                 } else {
-                    if (contentDiv.childNodes.length > 0) {
-                        pagesHtmlChunks.push(contentDiv.innerHTML);
-                        contentDiv.innerHTML = '';
+                    if (!hasAddedContentToPage) {
+                        container.appendChild(node);
+                        hasAddedContentToPage = true;
+                    } else {
+                        pushPageAndRebuildStack();
+                        container = activeStack.length > 0 ? activeStack[activeStack.length - 1].elementRef : contentDiv;
+                        container.appendChild(node);
+                        hasAddedContentToPage = true;
                     }
-                    contentDiv.appendChild(node);
+                }
+            } else {
+                if (node.nodeType === 3 && node.textContent.trim() !== '') {
+                    hasAddedContentToPage = true;
+                } else if (node.nodeType === 1) {
+                    hasAddedContentToPage = true;
                 }
             }
+        };
+
+        for (let node of allNodes) {
+            processNode(node);
         }
-        if (contentDiv.childNodes.length > 0) {
+        
+        if (hasAddedContentToPage || contentDiv.childNodes.length > 0) {
             pagesHtmlChunks.push(contentDiv.innerHTML);
         }
         
@@ -236,8 +297,12 @@ export class StorySheet extends JournalSheet {
 
             lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
             lastInserted = newPage;
+          }
         }
       }
+    } catch (e) {
+      console.error("StoryTeller2 | Text Splitting Error:", e);
+      if (ui.notifications) ui.notifications.error("StoryTeller2 Splitting Error: " + e.message);
     }
 
     this.Pager = this.getPager(storyId, savedPage);
@@ -270,7 +335,7 @@ export class StorySheet extends JournalSheet {
         /* this is so that the LANDSCAPE pages open on the correct odd/even group
         within the array, ESPECIALLY if the page is at the end of the array */
         if (pageId % 2 == 0) {
-          pageId = page--;
+          pageId--;
         }
         this.goToPage(pageId);
       });
@@ -296,6 +361,11 @@ export class StorySheet extends JournalSheet {
         );
       }
     });
+
+    // Failsafe: Ensure loading mask is removed after initial render
+    setTimeout(() => {
+        this.element[0].classList.remove("storyteller2-loading");
+    }, 150);
   }
 
   getPager(storyId, savedPage) {
