@@ -478,15 +478,18 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
 
 /* ======================================================== */`n/* FILTERS */
 /* ======================================================== */
-.filter-sepia .journal-page-content img {
-  filter: sepia(0.8) contrast(1.2);
+.filter-sepia .journal-page-content img,
+.filter-sepia .journal-entry-page.image figure img {
+  filter: sepia(1) contrast(1.2);
   mix-blend-mode: multiply;
 }
-.filter-grayscale .journal-page-content img {
+.filter-grayscale .journal-page-content img,
+.filter-grayscale .journal-entry-page.image figure img {
   filter: grayscale(1) contrast(1.2);
   mix-blend-mode: multiply;
 }
-.filter-invert .journal-page-content img {
+.filter-invert .journal-page-content img,
+.filter-invert .journal-entry-page.image figure img {
   filter: invert(0.9) hue-rotate(180deg);
   mix-blend-mode: screen;
 }

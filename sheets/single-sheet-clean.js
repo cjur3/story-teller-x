@@ -39,6 +39,9 @@ export class SingleSheetClean extends JournalSheet {
     this.sound();
     await super._render(force, options);
 
+    let filter = game.settings.get(MODULE_ID, "imageFilter");
+    if (filter) this.element[0].classList.add(`filter-${filter}`);
+
     let data = this.getData().data;
     let startPage = 1;
     let savedPage = getPage(data._id);

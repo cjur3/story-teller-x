@@ -40,6 +40,10 @@ export class SingleSheetMinimal extends JournalSheet {
   async _render(force, options = {}) {
     this.sound();
     await super._render(force, options);
+
+    let filter = game.settings.get(MODULE_ID, "imageFilter");
+    if (filter) this.element[0].classList.add(`filter-${filter}`);
+
     var journalEntryPages = document.querySelector(".journal-entry-pages");
     var jepHeight = journalEntryPages.offsetHeight;
     var jepWidth = journalEntryPages.offsetWidth;
