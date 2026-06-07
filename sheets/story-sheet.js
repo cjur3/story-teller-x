@@ -90,6 +90,7 @@ export class StorySheet extends JournalSheet {
 
   /** @inheritdoc */
   async _render(force, options = {}) {
+    const renderStart = Date.now();
     this.sound();
     await super._render(force, options);
     console.log("Story Teller 2 | Rendering Story Sheet");
@@ -179,9 +180,11 @@ export class StorySheet extends JournalSheet {
     });
 
     // Failsafe: Ensure loading mask is removed after initial render
+    const elapsed = Date.now() - renderStart;
+    const remaining = Math.max(150, 2000 - elapsed);
     setTimeout(() => {
         this.element[0].classList.remove("storyteller2-loading");
-    }, 150);
+    }, remaining);
   }
 
   getPager(storyId, savedPage) {
