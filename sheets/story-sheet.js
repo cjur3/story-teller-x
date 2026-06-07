@@ -92,6 +92,7 @@ export class StorySheet extends JournalSheet {
   async _render(force, options = {}) {
     this.sound();
     await super._render(force, options);
+    this.element.css("opacity", "0");
     console.log("Story Teller 2 | Rendering Story Sheet");
 
     let filter = game.settings.get(MODULE_ID, "imageFilter");
@@ -120,7 +121,7 @@ export class StorySheet extends JournalSheet {
         let pageIndex = 1;
         
         let allNodes = Array.from(contentDiv.childNodes);
-        let maxHeight = contentDiv.clientHeight;
+        let maxHeight = contentDiv.clientHeight - 30; // 30px safety margin to prevent bottom cutoff
         contentDiv.innerHTML = '';
         contentDiv.style.overflowY = 'hidden';
         
@@ -132,8 +133,8 @@ export class StorySheet extends JournalSheet {
             if (contentDiv.scrollHeight > maxHeight) {
                 contentDiv.removeChild(node);
                 
-                if (node.nodeType === 1 && node.tagName === 'P') {
-                    let p1 = document.createElement('p');
+                if (node.nodeType === 1 && !['IMG', 'IFRAME', 'TABLE', 'TR', 'TD', 'TH', 'HR'].includes(node.tagName)) {
+                    let p1 = document.createElement(node.tagName);
                     Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
                     contentDiv.appendChild(p1);
                     
@@ -159,7 +160,7 @@ export class StorySheet extends JournalSheet {
                                         pagesHtmlChunks.push(contentDiv.innerHTML);
                                         contentDiv.innerHTML = '';
                                         
-                                        p1 = document.createElement('p');
+                                        p1 = document.createElement(node.tagName);
                                         Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
                                         contentDiv.appendChild(p1);
                                         currentText = word;
@@ -171,31 +172,11 @@ export class StorySheet extends JournalSheet {
                                 pagesHtmlChunks.push(contentDiv.innerHTML);
                                 contentDiv.innerHTML = '';
                                 
-                                p1 = document.createElement('p');
+                                p1 = document.createElement(node.tagName);
                                 Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
                                 contentDiv.appendChild(p1);
                                 p1.appendChild(child);
                             }
-                        }
-                    }
-                } else if (node.nodeType === 1 && (node.tagName === 'UL' || node.tagName === 'OL')) {
-                    let list1 = document.createElement(node.tagName);
-                    Array.from(node.attributes).forEach(attr => list1.setAttribute(attr.name, attr.value));
-                    contentDiv.appendChild(list1);
-                    
-                    let lis = Array.from(node.children);
-                    for (let li of lis) {
-                        list1.appendChild(li);
-                        if (contentDiv.scrollHeight > maxHeight) {
-                            list1.removeChild(li);
-                            
-                            pagesHtmlChunks.push(contentDiv.innerHTML);
-                            contentDiv.innerHTML = '';
-                            
-                            list1 = document.createElement(node.tagName);
-                            Array.from(node.attributes).forEach(attr => list1.setAttribute(attr.name, attr.value));
-                            contentDiv.appendChild(list1);
-                            list1.appendChild(li);
                         }
                     }
                 } else {
@@ -429,6 +410,10 @@ export class StorySheet extends JournalSheet {
 
     var totalPages = this.Pager.pages.pages.length;
     this.stylePageTurnButtons(targetPageNum, totalPages);
+
+    setTimeout(() => {
+        this.element.animate({ opacity: 1 }, 300);
+    }, 150);
   }
 }
 
