@@ -480,7 +480,7 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
 /* ======================================================== */
 .filter-sepia .journal-page-content img,
 .filter-sepia .journal-entry-page.image figure img {
-  filter: sepia(1) contrast(1.2);
+  filter: contrast(0.5) sepia(1) contrast(2);
   mix-blend-mode: multiply;
 }
 .filter-grayscale .journal-page-content img,
