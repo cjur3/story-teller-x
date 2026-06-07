@@ -476,7 +476,8 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
   padding-left: 0;
 }
 
-/* ======================================================== */`n/* FILTERS */
+/* ======================================================== */
+/* FILTERS */
 /* ======================================================== */
 .filter-sepia .journal-page-content img,
 .filter-sepia .journal-entry-page.image figure img {
