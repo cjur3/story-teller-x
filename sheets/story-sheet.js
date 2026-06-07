@@ -132,10 +132,77 @@ export class StorySheet extends JournalSheet {
             if (contentDiv.scrollHeight > maxHeight + 10) {
                 contentDiv.removeChild(node);
                 
-                pagesHtmlChunks.push(contentDiv.innerHTML);
-                
-                contentDiv.innerHTML = '';
-                contentDiv.appendChild(node);
+                if (node.nodeType === 1 && node.tagName === 'P') {
+                    let p1 = document.createElement('p');
+                    Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
+                    contentDiv.appendChild(p1);
+                    
+                    let childNodes = Array.from(node.childNodes);
+                    for (let child of childNodes) {
+                        p1.appendChild(child);
+                        if (contentDiv.scrollHeight > maxHeight + 10) {
+                            p1.removeChild(child);
+                            
+                            if (child.nodeType === 3) {
+                                let words = child.textContent.split(/(\s+)/);
+                                let currentText = "";
+                                let textNode = document.createTextNode("");
+                                p1.appendChild(textNode);
+                                
+                                for (let word of words) {
+                                    currentText += word;
+                                    textNode.textContent = currentText;
+                                    if (contentDiv.scrollHeight > maxHeight + 10) {
+                                        currentText = currentText.substring(0, currentText.length - word.length);
+                                        textNode.textContent = currentText;
+                                        
+                                        pagesHtmlChunks.push(contentDiv.innerHTML);
+                                        contentDiv.innerHTML = '';
+                                        
+                                        p1 = document.createElement('p');
+                                        Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
+                                        contentDiv.appendChild(p1);
+                                        currentText = word;
+                                        textNode = document.createTextNode(currentText);
+                                        p1.appendChild(textNode);
+                                    }
+                                }
+                            } else {
+                                pagesHtmlChunks.push(contentDiv.innerHTML);
+                                contentDiv.innerHTML = '';
+                                
+                                p1 = document.createElement('p');
+                                Array.from(node.attributes).forEach(attr => p1.setAttribute(attr.name, attr.value));
+                                contentDiv.appendChild(p1);
+                                p1.appendChild(child);
+                            }
+                        }
+                    }
+                } else if (node.nodeType === 1 && (node.tagName === 'UL' || node.tagName === 'OL')) {
+                    let list1 = document.createElement(node.tagName);
+                    Array.from(node.attributes).forEach(attr => list1.setAttribute(attr.name, attr.value));
+                    contentDiv.appendChild(list1);
+                    
+                    let lis = Array.from(node.children);
+                    for (let li of lis) {
+                        list1.appendChild(li);
+                        if (contentDiv.scrollHeight > maxHeight + 10) {
+                            list1.removeChild(li);
+                            
+                            pagesHtmlChunks.push(contentDiv.innerHTML);
+                            contentDiv.innerHTML = '';
+                            
+                            list1 = document.createElement(node.tagName);
+                            Array.from(node.attributes).forEach(attr => list1.setAttribute(attr.name, attr.value));
+                            contentDiv.appendChild(list1);
+                            list1.appendChild(li);
+                        }
+                    }
+                } else {
+                    pagesHtmlChunks.push(contentDiv.innerHTML);
+                    contentDiv.innerHTML = '';
+                    contentDiv.appendChild(node);
+                }
             }
         }
         if (contentDiv.childNodes.length > 0) {
@@ -336,6 +403,12 @@ export class StorySheet extends JournalSheet {
     let targetPage = this.element[0].querySelector(
       `.story-sheet .page-num .journal-entry-page[data-page-id="${pageId}"]`
     );
+    if (!targetPage) return;
+    
+    let pageNumDiv = targetPage.closest('.page-num');
+    let allPageNums = Array.from(this.element[0].querySelectorAll('.page-num'));
+    let targetPageNum = allPageNums.indexOf(pageNumDiv);
+
     if (!this.Pager) {
       console.log("Story Teller 2 | Pager does not exist yet, creating");
       var storyId = this.getData().data._id;
@@ -350,11 +423,9 @@ export class StorySheet extends JournalSheet {
       }
     }
 
-    // since the handlebars starts at ZERO, we need to add 1 to each
-    let targetPageNum = Number(targetPage.dataset.entryIndex) + 1;
     console.log(`going to page: ${targetPageNum}, Journal Entry id: ${pageId}`);
 
-    this.Pager.flip(targetPageNum, "top"); //ToPage(targetPageNum);
+    this.Pager.turnToPage(targetPageNum);
 
     var totalPages = this.Pager.pages.pages.length;
     this.stylePageTurnButtons(targetPageNum, totalPages);

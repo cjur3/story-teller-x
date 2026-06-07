@@ -233,7 +233,9 @@ nav.storyteller-nav.tabs {
 }
 
 .story-sheet .journal-page-content img {
-  border: none;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
 }
 
 .story-sheet .page-num.num-start .pages-list>ol>li .page-title {
