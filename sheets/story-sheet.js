@@ -7,7 +7,7 @@ const bookHeight = 937;
 
 export class StorySheet extends JournalSheet {
   pageFlipSoundURL = `modules/${MODULE_ID}/sounds/paper-flip.mp3`;
-  static classes = ["sheet", "story-sheet"];
+  static classes = ["sheet", "story-sheet", "storyteller2-loading"];
 
   constructor(...args) {
     super(...args);
@@ -92,7 +92,6 @@ export class StorySheet extends JournalSheet {
   async _render(force, options = {}) {
     this.sound();
     await super._render(force, options);
-    this.element.css("opacity", "0");
     console.log("Story Teller 2 | Rendering Story Sheet");
 
     let filter = game.settings.get(MODULE_ID, "imageFilter");
@@ -412,7 +411,7 @@ export class StorySheet extends JournalSheet {
     this.stylePageTurnButtons(targetPageNum, totalPages);
 
     setTimeout(() => {
-        this.element.animate({ opacity: 1 }, 300);
+        this.element[0].classList.remove("storyteller2-loading");
     }, 150);
   }
 }
