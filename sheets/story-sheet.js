@@ -120,48 +120,61 @@ export class StorySheet extends JournalSheet {
         let pageIndex = 1;
         
         let allNodes = Array.from(contentDiv.childNodes);
+        let maxHeight = contentDiv.clientHeight;
         contentDiv.innerHTML = '';
         contentDiv.style.overflowY = 'hidden';
         
-        let currentContentDiv = contentDiv;
+        let pagesHtmlChunks = [];
         
         for (let node of allNodes) {
-            currentContentDiv.appendChild(node);
+            contentDiv.appendChild(node);
             
-            if (currentContentDiv.scrollHeight > currentContentDiv.clientHeight + 10) {
-                currentContentDiv.removeChild(node);
+            if (contentDiv.scrollHeight > maxHeight + 10) {
+                contentDiv.removeChild(node);
                 
-                pageIndex++;
-                let newPage = document.createElement('div');
-                let isOdd = parentPageNum.classList.contains('odd') ? (pageIndex % 2 !== 0) : (pageIndex % 2 === 0);
-                newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
+                pagesHtmlChunks.push(contentDiv.innerHTML);
                 
-                let newArticle = article.cloneNode(false);
-                let newContentDiv = contentDiv.cloneNode(false);
-                newContentDiv.style.overflowY = 'hidden';
-                
-                let backBtn = document.createElement('a');
-                backBtn.className = 'back-to-toc';
-                backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
-                backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
-                newArticle.appendChild(backBtn);
-                
-                newArticle.appendChild(newContentDiv);
-                newPage.appendChild(newArticle);
-                
-                let leftArrow = document.createElement('div');
-                leftArrow.className = "journal-page-arrow-left storyteller2-page-entry-nav prev";
-                let rightArrow = document.createElement('div');
-                rightArrow.className = "journal-page-arrow-right storyteller2-page-entry-nav next";
-                newPage.appendChild(leftArrow);
-                newPage.appendChild(rightArrow);
-
-                lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
-                lastInserted = newPage;
-                currentContentDiv = newContentDiv;
-                
-                currentContentDiv.appendChild(node);
+                contentDiv.innerHTML = '';
+                contentDiv.appendChild(node);
             }
+        }
+        if (contentDiv.childNodes.length > 0) {
+            pagesHtmlChunks.push(contentDiv.innerHTML);
+        }
+        
+        if (pagesHtmlChunks.length > 0) {
+            contentDiv.innerHTML = pagesHtmlChunks[0];
+        }
+        
+        for (let i = 1; i < pagesHtmlChunks.length; i++) {
+            pageIndex++;
+            let newPage = document.createElement('div');
+            let isOdd = parentPageNum.classList.contains('odd') ? (pageIndex % 2 !== 0) : (pageIndex % 2 === 0);
+            newPage.className = `page-num ${isOdd ? 'odd' : 'even'}`;
+            
+            let newArticle = article.cloneNode(false);
+            let newContentDiv = contentDiv.cloneNode(false);
+            newContentDiv.style.overflowY = 'hidden';
+            newContentDiv.innerHTML = pagesHtmlChunks[i];
+            
+            let backBtn = document.createElement('a');
+            backBtn.className = 'back-to-toc';
+            backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
+            backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
+            newArticle.appendChild(backBtn);
+            
+            newArticle.appendChild(newContentDiv);
+            newPage.appendChild(newArticle);
+            
+            let leftArrow = document.createElement('div');
+            leftArrow.className = "journal-page-arrow-left storyteller2-page-entry-nav prev";
+            let rightArrow = document.createElement('div');
+            rightArrow.className = "journal-page-arrow-right storyteller2-page-entry-nav next";
+            newPage.appendChild(leftArrow);
+            newPage.appendChild(rightArrow);
+
+            lastInserted.parentNode.insertBefore(newPage, lastInserted.nextSibling);
+            lastInserted = newPage;
         }
       }
     }
