@@ -110,6 +110,16 @@ export class StorySheet extends JournalSheet {
       savedPage = data.pages.length - 1;
     }
 
+    let allArticles = this.element[0].querySelectorAll('article.journal-entry-page:not(.num-start)');
+    for (let article of allArticles) {
+      if (!article.querySelector('.back-to-toc')) {
+        let backBtn = document.createElement('a');
+        backBtn.className = 'back-to-toc';
+        backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
+        backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
+        article.appendChild(backBtn);
+      }
+    }
 
     this.Pager = this.getPager(storyId, savedPage);
 
