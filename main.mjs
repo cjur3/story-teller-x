@@ -160,11 +160,11 @@ Hooks.once("init", function () {
 });
 
 Hooks.on("renderJournalDirectory", (app, html, data) => {
-    const importBtn = $(`<button class="storyteller-importer-btn"><i class="fas fa-book"></i> Import E-book</button>`);
+    const importBtn = $(`<button class="storyteller-importer-btn"><i class="fas fa-book"></i> Import text document or e-book</button>`);
     importBtn.on("click", ev => {
         new StoryImporterDialog().render(true);
     });
-    html.find('.directory-header .header-actions').append(importBtn);
+    $('.directory-header .header-actions').append(importBtn);
 });
 
 function registerSettings() {

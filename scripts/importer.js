@@ -1,15 +1,29 @@
 import { MODULE_ID } from "../main.mjs";
 
-export class StoryImporterDialog extends FormApplication {
-    static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
-            id: "storyteller-importer",
-            title: game.i18n.localize("STORYTELLER.ImporterTitle") || "StoryTeller X E-book Importer",
-            template: `modules/${MODULE_ID}/templates/importer.html`,
-            classes: ["sheet"],
-            width: 400,
-            height: "auto",
-        });
+export class StoryImporterDialog {
+
+    async render() {
+        const importer = await foundry.applications.handlebars.renderTemplate(`modules/${MODULE_ID}/templates/importer.html`);
+        foundry.applications.api.DialogV2.prompt({
+            window: {
+                title: game.i18n.localize("STORYTELLER.ImporterTitle") || "StoryTeller X E-book Importer",
+                icon: "fas fa-book",
+                resizable: true
+            },
+            position: {
+                width: 500
+            },
+            content: importer,
+            ok: {
+                label: "Import E-Book",
+                icon: "fas fa-upload",
+                callback: (event, button, dialog) => this._onImport(event)
+            },
+            render: event => {
+                this.element = event.target.element;
+            }
+        })
+
     }
 
     activateListeners(html) {
@@ -19,7 +33,8 @@ export class StoryImporterDialog extends FormApplication {
 
     async _onImport(event) {
         event.preventDefault();
-        const fileInput = this.element.find('input[type="file"]')[0];
+        const fileInput = this.element.querySelector('input[type="file"]');
+
         if (!fileInput.files.length) {
             ui.notifications.error("Please select a file to import.");
             return;
@@ -27,7 +42,7 @@ export class StoryImporterDialog extends FormApplication {
 
         const file = fileInput.files[0];
         const fileName = file.name;
-        
+
         if (fileName.endsWith('.txt')) {
             await this._importTxt(file);
         } else if (fileName.endsWith('.epub')) {
@@ -40,7 +55,7 @@ export class StoryImporterDialog extends FormApplication {
     async _importTxt(file) {
         const text = await file.text();
         const paragraphs = text.split(/\n\s*\n/); // Split by double newlines
-        
+
         await this._createJournal(file.name.replace('.txt', ''), paragraphs);
     }
 
@@ -54,8 +69,8 @@ export class StoryImporterDialog extends FormApplication {
                         let html = await zipEntry.async("text");
                         // Strip HTML tags
                         let stripped = html.replace(/<style[^>]*>.*<\/style>/gi, '')
-                                           .replace(/<[^>]+>/g, ' ')
-                                           .replace(/\s+/g, ' ');
+                            .replace(/<[^>]+>/g, ' ')
+                            .replace(/\s+/g, ' ');
                         textContent.push(stripped);
                     }
                 }
@@ -74,17 +89,17 @@ export class StoryImporterDialog extends FormApplication {
             name: name,
             pages: []
         };
-        
+
         let pages = [];
         let currentPageText = "";
         let pageCount = 1;
-        
+
         for (let i = 0; i < chunks.length; i++) {
             let p = chunks[i].trim();
             if (!p) continue;
-            
+
             currentPageText += `<p>${p}</p>`;
-            
+
             if ((i > 0 && i % 10 === 0) || i === chunks.length - 1) {
                 pages.push({
                     name: `Page ${pageCount}`,
@@ -98,15 +113,14 @@ export class StoryImporterDialog extends FormApplication {
                 pageCount++;
             }
         }
-        
+
         journalData.pages = pages;
-        
+
         try {
             const entry = await JournalEntry.create(journalData);
             ui.notifications.info(`Successfully imported ${name} as a Journal Entry!`);
             entry.sheet.render(true);
-            this.close();
-        } catch(e) {
+        } catch (e) {
             console.error(e);
             ui.notifications.error("Failed to create Journal Entry.");
         }
