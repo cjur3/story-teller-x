@@ -3,6 +3,7 @@ import { SingleSheetMinimal } from "./sheets/single-sheet-minimal.js";
 
 import { StorySheet } from "./sheets/story-sheet.js";
 import { registerHotkeys } from "./scripts/config.js";
+import { StoryImporterDialog } from "./scripts/importer.js";
 
 export const MODULE_ID = "story-teller-x";
 
@@ -118,6 +119,33 @@ Hooks.on("ready", () => {
   });
 
   console.log("Story Teller 2 Journal | Ready");
+
+  let pdfChoices = { "default": "Default" };
+  for (let s of Object.values(CONFIG.JournalEntry.sheetClasses.base || {})) {
+    if (s.id !== "story-teller-x.StorySheet") {
+      pdfChoices[s.id] = s.label;
+    }
+  }
+  let setting = game.settings.settings.get(`${MODULE_ID}.pdfSheet`);
+  if (setting) {
+    setting.choices = pdfChoices;
+  }
+
+  const originalGetSheetClass = CONFIG.JournalEntry.documentClass.prototype._getSheetClass;
+  CONFIG.JournalEntry.documentClass.prototype._getSheetClass = function() {
+    let sheetClass = originalGetSheetClass.call(this);
+
+    const hasPDF = this.pages.some(p => p.type === "pdf");
+    if (hasPDF) {
+      const customPdfSheet = game.settings.get(MODULE_ID, "pdfSheet");
+      if (customPdfSheet && customPdfSheet !== "default") {
+        const overrideSheet = CONFIG.JournalEntry.sheetClasses.base[customPdfSheet];
+        if (overrideSheet) return overrideSheet.cls;
+      }
+    }
+
+    return sheetClass;
+  };
 });
 
 Hooks.on("init", () => {
@@ -129,6 +157,14 @@ Hooks.on("init", () => {
 
 Hooks.once("init", function () {
   //CONFIG.debug.hooks = true;
+});
+
+Hooks.on("renderJournalDirectory", (app, html, data) => {
+    const importBtn = $(`<button class="storyteller-importer-btn"><i class="fas fa-book"></i> Import text document or e-book</button>`);
+    importBtn.on("click", ev => {
+        new StoryImporterDialog().render(true);
+    });
+    $('.directory-header .header-actions').append(importBtn);
 });
 
 function registerSettings() {
@@ -157,11 +193,59 @@ function registerSettings() {
     config: true,
   });
 
+  game.settings.register(`${MODULE_ID}`, "pageTurnSound", {
+    name: game.i18n.localize("StoryTeller2.Settings.PageTurnSound"),
+    hint: game.i18n.localize("StoryTeller2.Settings.PageTurnSoundHint"),
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
+
+
+  game.settings.register(`${MODULE_ID}`, "imageFilter", {
+    name: game.i18n.localize("StoryTeller2.Settings.ImageFilter"),
+    hint: game.i18n.localize("StoryTeller2.Settings.ImageFilterHint"),
+    scope: "client",
+    config: true,
+    type: String,
+    choices: {
+      "none": "None",
+      "sepia": "Sepia",
+      "grayscale": "Grayscale",
+      "invert": "Dark / Invert",
+    },
+    default: "none",
+    onChange: () => window.location.reload()
+  });
+
+  game.settings.register(`${MODULE_ID}`, "hideTOCPageNumbers", {
+    name: game.i18n.localize("StoryTeller2.Settings.HideTOCPageNumbers"),
+    hint: game.i18n.localize("StoryTeller2.Settings.HideTOCPageNumbersHint"),
+    scope: "client",
+    type: Boolean,
+    default: false,
+    config: true,
+  });
+
   game.settings.register(`${MODULE_ID}`, "pages", {
     scope: "client",
     type: Object,
     default: {},
     config: false,
+  });
+
+  game.settings.register(`${MODULE_ID}`, "pdfSheet", {
+    name: game.i18n.localize("StoryTeller2.Settings.PdfSheet"),
+    hint: game.i18n.localize("StoryTeller2.Settings.PdfSheetHint"),
+    scope: "client",
+    config: true,
+    type: String,
+    choices: {
+      "default": "Default",
+    },
+    default: "default",
   });
 }
 
@@ -182,3 +266,4 @@ Handlebars.registerHelper("getDontOpen", function () {
 });
 
 export const SHEET_TYPES = Array.from(Object.values(StoryTeller2.SHEET_TYPES));
+

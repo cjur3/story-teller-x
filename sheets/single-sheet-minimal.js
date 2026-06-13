@@ -40,6 +40,10 @@ export class SingleSheetMinimal extends JournalSheet {
   async _render(force, options = {}) {
     this.sound();
     await super._render(force, options);
+
+    let filter = game.settings.get(MODULE_ID, "imageFilter");
+    if (filter) this.element[0].classList.add(`filter-${filter}`);
+
     var journalEntryPages = document.querySelector(".journal-entry-pages");
     var jepHeight = journalEntryPages.offsetHeight;
     var jepWidth = journalEntryPages.offsetWidth;
@@ -96,13 +100,13 @@ export class SingleSheetMinimal extends JournalSheet {
         ".journal-entry-pages .pagelookup li"
       );
       let count = totalPages?.length;
-      let ajustednewPageNumber =
+      let adjustedNewPageNumber =
         newPageNumber != 0 && !(newPageNumber > count)
           ? newPageNumber - 1
           : newPageNumber;
 
       var pageState = "toc";
-      var pageClass = ajustednewPageNumber;
+      var pageClass = adjustedNewPageNumber;
       if (newPageNumber === 0) {
         pageState = "toc";
         pageClass = "num-start";
@@ -292,13 +296,6 @@ export class SingleSheetMinimal extends JournalSheet {
   }
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
 
 function getBookWidth() {
   let height = getBookHeight();

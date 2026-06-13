@@ -51,15 +51,15 @@
 }
 
 .pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav:hover {
-  opacity: 1;
-  transition: opacity 1s;
-  background-color: red;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  background: black;
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav:hover {
-  opacity: 1;
-  transition: opacity 1s;
-  background-color: red;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  background: black;
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav {
@@ -140,6 +140,47 @@ nav.storyteller-nav.tabs {
   padding: 0 0.34% 0.34% 0.34%;
   /* hack */
   height: 0;
+}
+
+.window-app.story-sheet .journal-sheet-container,
+.window-app.story-sheet form {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.window-app.story-sheet.storyteller2-loading .journal-sheet-container,
+.window-app.story-sheet.storyteller2-loading form {
+  opacity: 0 !important;
+}
+
+.window-app.story-sheet .storyteller-loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.window-app.story-sheet .storyteller-loading-screen h1 {
+  font-family: "Kurale", serif;
+  font-size: 5vh;
+  color: #48392e;
+  background: rgba(255, 250, 240, 0.6);
+  padding: 10px 40px;
+  border-radius: 4px;
+  border: 1px solid rgba(72, 57, 46, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.window-app.story-sheet.storyteller2-loading .storyteller-loading-screen {
+  opacity: 1;
 }
 
 .story-sheet:before {
@@ -230,10 +271,14 @@ nav.storyteller-nav.tabs {
   color: #48392e;
   height: 85%;
   overflow-y: scroll;
+  padding: 0 6% 6% 6%;
+  box-sizing: border-box;
 }
 
 .story-sheet .journal-page-content img {
-  border: none;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
 }
 
 .story-sheet .page-num.num-start .pages-list>ol>li .page-title {
@@ -246,6 +291,29 @@ nav.storyteller-nav.tabs {
 
 .story-sheet .page-num.num-start .pages-list>ol {
   font-size: 2.4vh;
+  text-align: center;
+}
+
+.story-sheet .back-to-toc {
+  display: block;
+  position: absolute;
+  top: 1.3%;
+  left: 2%;
+  font-size: 1.5em;
+  color: #48392e;
+  cursor: pointer;
+  z-index: 100;
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.story-sheet .back-to-toc:hover {
+  opacity: 1.0;
+}
+
+.page-num.odd .back-to-toc {
+  left: auto;
+  right: 2%;
 }
 
 .story-sheet .page-num.num-start .pages-list .headings {
@@ -387,3 +455,44 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
   background: url(../img/old_book/right-page.webp);
   background-size: cover;
 }
+
+.story-sheet .back-to-toc {
+  display: block;
+  position: absolute;
+  top: 1.3%;
+  left: 2%;
+  font-size: 1.5em;
+  color: #48392e;
+  cursor: pointer;
+  z-index: 100;
+}
+.page-num.odd .back-to-toc {
+  left: auto;
+  right: 2%;
+}
+
+.story-sheet.hide-toc-numbers .page-num.num-start .pages-list > ol {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* ======================================================== */
+/* FILTERS */
+/* ======================================================== */
+.filter-sepia .journal-page-content img,
+.filter-sepia .journal-entry-page.image figure img {
+  filter: contrast(0.5) sepia(1) contrast(2);
+  mix-blend-mode: multiply;
+}
+.filter-grayscale .journal-page-content img,
+.filter-grayscale .journal-entry-page.image figure img {
+  filter: grayscale(1) contrast(1.2);
+  mix-blend-mode: multiply;
+}
+.filter-invert .journal-page-content img,
+.filter-invert .journal-entry-page.image figure img {
+  filter: invert(0.9) hue-rotate(180deg);
+  mix-blend-mode: screen;
+}
+
+

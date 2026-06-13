@@ -7,7 +7,7 @@ const bookHeight = 937;
 
 export class StorySheet extends JournalSheet {
   pageFlipSoundURL = `modules/${MODULE_ID}/sounds/paper-flip.mp3`;
-  static classes = ["sheet", "story-sheet"];
+  static classes = ["sheet", "story-sheet", "storyteller2-loading"];
 
   constructor(...args) {
     super(...args);
@@ -90,17 +90,36 @@ export class StorySheet extends JournalSheet {
 
   /** @inheritdoc */
   async _render(force, options = {}) {
+    const renderStart = Date.now();
     this.sound();
     await super._render(force, options);
     console.log("Story Teller 2 | Rendering Story Sheet");
+
+    let filter = game.settings.get(MODULE_ID, "imageFilter");
+    if (filter) this.element[0].classList.add(`filter-${filter}`);
+
+    let hideTOCNumbers = game.settings.get(MODULE_ID, "hideTOCPageNumbers");
+    if (hideTOCNumbers) this.element[0].classList.add(`hide-toc-numbers`);
 
     let data = this.getData().data;
     let storyId = data._id;
     let startPage = data.pages.length >= 1 ? 2 : 1;
 
     let savedPage = getPage(data._id) ?? 0;
+
     if (savedPage > data.pages.length) {
       savedPage = data.pages.length - 1;
+    }
+
+    let allArticles = this.element[0].querySelectorAll('article.journal-entry-page:not(.num-start)');
+    for (let article of allArticles) {
+      if (!article.querySelector('.back-to-toc')) {
+        let backBtn = document.createElement('a');
+        backBtn.className = 'back-to-toc';
+        backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
+        backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
+        article.appendChild(backBtn);
+      }
     }
 
     this.Pager = this.getPager(storyId, savedPage);
@@ -114,6 +133,15 @@ export class StorySheet extends JournalSheet {
     var totalPages = this.Pager.pages.pages.length;
     this.stylePageTurnButtons(savedPage, totalPages);
 
+    var backToTocBtns = this.element[0].querySelectorAll(".back-to-toc");
+    backToTocBtns.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.Pager.turnToPage(0);
+      });
+    });
+
     var journalEntries = this.element[0].querySelectorAll(
       ".page-num.num-start ol li.level1"
     );
@@ -124,7 +152,7 @@ export class StorySheet extends JournalSheet {
         /* this is so that the LANDSCAPE pages open on the correct odd/even group
         within the array, ESPECIALLY if the page is at the end of the array */
         if (pageId % 2 == 0) {
-          pageId = page--;
+          pageId--;
         }
         this.goToPage(pageId);
       });
@@ -137,7 +165,26 @@ export class StorySheet extends JournalSheet {
 
       this.stylePageTurnButtons(newPageNumber, totalPages);
       setPage(data._id, newPageNumber);
+
+      if (game.settings.get(`${MODULE_ID}`, "pageTurnSound")) {
+        foundry.audio.AudioHelper.play(
+          {
+            src: this.pageFlipSoundURL,
+            volume: 0.8,
+            autoplay: true,
+            loop: false,
+          },
+          false
+        );
+      }
     });
+
+    // Failsafe: Ensure loading mask is removed after initial render
+    const elapsed = Date.now() - renderStart;
+    const remaining = Math.max(150, 2000 - elapsed);
+    setTimeout(() => {
+        this.element[0].classList.remove("storyteller2-loading");
+    }, remaining);
   }
 
   getPager(storyId, savedPage) {
@@ -158,8 +205,9 @@ export class StorySheet extends JournalSheet {
       maxShadowOpacity: 0.9, // Half shadow intensity
       showCover: true,
       clickEventClasses: [
+        "editor-edit",
         "storyteller2-page-entry-nav",
-        "journal-entry-pages-nav",
+        "back-to-toc"
       ],
     });
   }
@@ -238,6 +286,12 @@ export class StorySheet extends JournalSheet {
     let targetPage = this.element[0].querySelector(
       `.story-sheet .page-num .journal-entry-page[data-page-id="${pageId}"]`
     );
+    if (!targetPage) return;
+    
+    let pageNumDiv = targetPage.closest('.page-num');
+    let allPageNums = Array.from(this.element[0].querySelectorAll('.page-num'));
+    let targetPageNum = allPageNums.indexOf(pageNumDiv);
+
     if (!this.Pager) {
       console.log("Story Teller 2 | Pager does not exist yet, creating");
       var storyId = this.getData().data._id;
@@ -252,14 +306,16 @@ export class StorySheet extends JournalSheet {
       }
     }
 
-    // since the handlebars starts at ZERO, we need to add 1 to each
-    let targetPageNum = Number(targetPage.dataset.entryIndex) + 1;
     console.log(`going to page: ${targetPageNum}, Journal Entry id: ${pageId}`);
 
-    this.Pager.flip(targetPageNum, "top"); //ToPage(targetPageNum);
+    this.Pager.turnToPage(targetPageNum);
 
     var totalPages = this.Pager.pages.pages.length;
     this.stylePageTurnButtons(targetPageNum, totalPages);
+
+    setTimeout(() => {
+        this.element[0].classList.remove("storyteller2-loading");
+    }, 150);
   }
 }
 
