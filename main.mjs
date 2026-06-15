@@ -160,11 +160,25 @@ Hooks.once("init", function () {
 });
 
 Hooks.on("renderJournalDirectory", (app, html, data) => {
-    const importBtn = $(`<button class="storyteller-importer-btn"><i class="fas fa-book"></i> Import text document or e-book</button>`);
-    importBtn.on("click", ev => {
-        new StoryImporterDialog().render(true);
+  const button = html.querySelector("#stoy-teller-import-button");
+
+  if (!button) {
+    const importButtonIcon = document.createElement("i");
+    importButtonIcon.classList.add("fas", "fa-book");
+    const importButtonText = document.createElement("span");
+    importButtonText.innerText = "Import text document or e-book"
+    const importButton = document.createElement("button");
+    importButton.classList.add("storyteller-importer-btn");
+
+    importButton.appendChild(importButtonIcon);
+    importButton.appendChild(importButtonText);
+
+    importButton.addEventListener("click", ev => {
+      new StoryImporterDialog().render(true);
     });
-    $('.directory-header .header-actions').append(importBtn);
+
+    html.querySelector(".directory-header .header-actions").appendChild(importButton);
+  }
 });
 
 function registerSettings() {
