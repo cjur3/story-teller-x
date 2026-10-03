@@ -1,7 +1,90 @@
 @import url("https://fonts.googleapis.com/css2?family=Kurale&display=swap");
 @import "compability.css";
 @import "themes/newspaper.css";
+@import "themes/captains-log.css";
+@import "themes/starship-captains-log.css";
 @import "themes/fullscreen.css";
+
+.story-sheet .storyteller-native-sidebar {
+  display: none;
+}
+
+.application.story-sheet,
+.application.story-sheet .window-content,
+.application.story-sheet [data-application-part="pages"],
+.application.story-sheet .journal-entry-pages,
+.application.story-sheet .pages,
+.application.story-sheet .stf__parent,
+.application.story-sheet .stf__wrapper {
+  background: transparent !important;
+}
+
+.application.story-sheet .window-content {
+  padding: 0;
+  overflow: visible;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.application.story-sheet .journal-header {
+  display: none;
+}
+
+.application.story-sheet::before {
+  z-index: 0 !important;
+  pointer-events: none;
+}
+
+.application.story-sheet > .window-header,
+.application.story-sheet > .window-content {
+  position: relative;
+  z-index: 1;
+}
+
+.story-sheet [data-application-part="pages"],
+.story-sheet [data-application-part="pages"] .journal-entry-pages {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.story-sheet .page-num.num-start > .journal-entry-page .content-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 5% 7%;
+  box-sizing: border-box;
+}
+
+.story-sheet .page-num.num-start .pages-list {
+  flex: 1;
+  min-height: 0;
+  margin: 1.5rem 0 1rem;
+  overflow-y: auto;
+}
+
+.story-sheet .page-num.num-start .directory-list {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-sheet .page-num.num-start .storyteller-toc-entry {
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.story-sheet .page-num.num-start .create {
+  flex: 0 0 auto;
+  width: 100%;
+}
 
 .app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page {
   background: url(../img/old_book/editor.webp);
@@ -495,4 +578,167 @@ div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div
   mix-blend-mode: screen;
 }
 
+/* ======================================================== */
+/* APPLICATION V2 LAYOUT NORMALIZATION                       */
+/* Keep these rules last: the legacy V1 sheet rules above    */
+/* otherwise override the V2 contents page and page panels.  */
+/* ======================================================== */
+.application.story-sheet .stf__parent {
+  transform: none !important;
+}
 
+.application.story-sheet .stf__wrapper,
+.application.story-sheet .stf__block,
+.application.story-sheet .stf__item,
+.application.story-sheet .page-num {
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.application.story-sheet .page-num {
+  position: relative;
+  overflow: hidden !important;
+}
+
+.application.story-sheet .page-num > .journal-entry-page {
+  position: relative;
+  max-width: none !important;
+  max-height: none !important;
+  box-sizing: border-box;
+}
+
+.application.story-sheet .page-num.num-start > .journal-entry-page.pages-content {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.application.story-sheet .page-num.num-start > .journal-entry-page .content-inner {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: stretch;
+  width: 100%;
+  height: 100% !important;
+  min-height: 0;
+  padding: 7% 8% 6% !important;
+  box-sizing: border-box;
+}
+
+.application.story-sheet .page-num.num-start .content-inner > h1 {
+  height: auto !important;
+  margin: 0 0 1rem;
+}
+
+.application.story-sheet .page-num.num-start .pages-list {
+  display: block;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0;
+  margin: 0 0 1rem !important;
+  overflow: auto;
+}
+
+.application.story-sheet .page-num.num-start .pages-list > ol.directory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+.application.story-sheet .page-num.num-start .storyteller-toc-entry {
+  flex: 0 0 auto;
+  min-height: 2.5rem;
+  opacity: 1;
+}
+
+.application.story-sheet .page-num.num-start .create {
+  position: relative;
+  inset: auto;
+  flex: none;
+  width: 100%;
+  min-height: 2.5rem;
+  margin: 0;
+  opacity: 1;
+}
+
+/* Put the standard paper on the page content itself. This keeps it out of
+   PageFlip's scaled page surface and preserves the source texture detail. */
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .page-num:nth-child(2n) {
+  background: transparent !important;
+}
+
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .page-num:nth-child(2n-1) {
+  background: transparent !important;
+}
+
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .page-num:nth-child(2n) > .journal-entry-page {
+  width: 88% !important;
+  height: 90% !important;
+  margin: 5% 6% !important;
+  background: transparent !important;
+}
+
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .page-num:nth-child(2n-1) > .journal-entry-page {
+  width: 88% !important;
+  height: 90% !important;
+  margin: 5% 6% !important;
+  background: transparent !important;
+}
+
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .page-num.num-start > .journal-entry-page.pages-content {
+  width: 88% !important;
+  height: 90% !important;
+  margin: 5% 6% !important;
+}
+
+/* Render spread artwork directly on the V2 window. Pseudo-elements are
+   composited into a texture by Chromium and become visibly soft when the
+   Foundry window is scaled. */
+.application.story-sheet {
+  background: url(../img/old_book/book.webp) center / 100% 100% no-repeat !important;
+}
+
+.application.story-sheet.newspaper {
+  background: url(themes/newspaper.webp) center / 100% 100% no-repeat !important;
+}
+
+.application.story-sheet.captains-log {
+  background: url(themes/captains-log.webp) center / 100% 100% no-repeat !important;
+}
+
+.application.story-sheet.starship-captains-log {
+  background: url(themes/starship-captains-log.webp) center / 100% 100% no-repeat !important;
+}
+
+.application.story-sheet::before {
+  display: none !important;
+}
+
+/* Chromium can otherwise choose a softer interpolation when Foundry sizes
+   the fixed-ratio sheet to a non-integer number of device pixels. */
+.application.story-sheet {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .journal-page-arrow-left,
+.application.story-sheet:not(.newspaper):not(.captains-log):not(.starship-captains-log)
+  .journal-page-arrow-right {
+  width: 44px !important;
+  height: 44px !important;
+  mask-size: 42px !important;
+  -webkit-mask-size: 42px 42px !important;
+  background-color: #f2dfb7 !important;
+  filter: drop-shadow(0 0 2px #2a1b12) drop-shadow(0 0 6px rgba(0, 0, 0, 0.95)) !important;
+  opacity: 1 !important;
+}

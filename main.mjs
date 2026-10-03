@@ -1,7 +1,7 @@
 import { SingleSheetClean } from "./sheets/single-sheet-clean.js";
 import { SingleSheetMinimal } from "./sheets/single-sheet-minimal.js";
 
-import { StorySheet } from "./sheets/story-sheet.js";
+import { StorySheetV2 as StorySheet } from "./sheets/story-sheet-v2.js";
 import { registerHotkeys } from "./scripts/config.js";
 import { StoryImporterDialog } from "./scripts/importer.js";
 
@@ -45,6 +45,12 @@ class StoryTeller2 {
         types: ["base"],
         makeDefault: false,
         label: game.i18n.localize(localizationKey),
+        themes: className === "StorySheet" ? {
+          book: game.i18n.localize("StoryTeller2.Settings.ThemeBook"),
+          newspaper: game.i18n.localize("StoryTeller2.Settings.ThemeNewspaper"),
+          "captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeShipCaptainsLog"),
+          "starship-captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeStarshipCaptainsLog"),
+        } : undefined,
       });
     }
 
@@ -77,7 +83,7 @@ class StoryTeller2 {
     }
 
     let story = game.journal.get(id);
-    story.sheet.render(true);
+    story.sheet.render({force: true});
   }
 
   async _setPageToOpen(data) {
@@ -216,7 +222,21 @@ function registerSettings() {
     config: true,
   });
 
-
+  game.settings.register(`${MODULE_ID}`, "theme", {
+    name: game.i18n.localize("StoryTeller2.Settings.DefaultTheme"),
+    hint: game.i18n.localize("StoryTeller2.Settings.DefaultThemeHint"),
+    scope: "world",
+    config: true,
+    type: String,
+    choices: {
+      book: game.i18n.localize("StoryTeller2.Settings.ThemeBook"),
+      newspaper: game.i18n.localize("StoryTeller2.Settings.ThemeNewspaper"),
+      "captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeShipCaptainsLog"),
+      "starship-captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeStarshipCaptainsLog"),
+    },
+    default: "book",
+    onChange: () => window.location.reload(),
+  });
 
   game.settings.register(`${MODULE_ID}`, "imageFilter", {
     name: game.i18n.localize("StoryTeller2.Settings.ImageFilter"),
@@ -280,4 +300,3 @@ Handlebars.registerHelper("getDontOpen", function () {
 });
 
 export const SHEET_TYPES = Array.from(Object.values(StoryTeller2.SHEET_TYPES));
-

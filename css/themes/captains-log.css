@@ -1,0 +1,70 @@
+:root {
+  --captains-log-text-color: #2b2924;
+  --captains-log-rule-color: rgba(49, 72, 82, 0.3);
+}
+
+.story-sheet.captains-log::before {
+  background: url("captains-log.webp");
+  background-size: 100% 100%;
+}
+
+.story-sheet.captains-log .page-num {
+  background: transparent;
+}
+
+.story-sheet.captains-log .page-inner .editor,
+.story-sheet.captains-log .journal-page-content {
+  color: var(--captains-log-text-color);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15vh;
+  line-height: 1.55;
+}
+
+.story-sheet.captains-log .page.left > .page-inner {
+  padding: 3% 7% 6% 5%;
+}
+
+.story-sheet.captains-log .page.right > .page-inner {
+  padding: 3% 5% 6% 7%;
+}
+
+.story-sheet.captains-log .window-header {
+  color: #e1c58a;
+}
+
+.story-sheet.captains-log h1 {
+  border-bottom: 4px double var(--captains-log-rule-color);
+  color: #293f49;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+}
+
+.story-sheet.captains-log h2,
+.story-sheet.captains-log h3 {
+  border-bottom: 1px solid var(--captains-log-rule-color);
+  color: #344f59;
+}
+
+.window-app.story-sheet.captains-log .window-content {
+  margin: 0 3% 3% 3%;
+}
+
+.application.story-sheet.captains-log .page-num > .journal-entry-page {
+  width: 88% !important;
+  height: 88% !important;
+  margin: 6% !important;
+}
+
+.application.story-sheet.captains-log .page-num.num-start .content-inner {
+  padding: 5% 7% 4% !important;
+}
+
+.application.story-sheet.captains-log .page-num.num-start .storyteller-toc-entry {
+  color: var(--captains-log-text-color);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+}
+
+.application.story-sheet.captains-log .page-num > .journal-entry-page {
+  background: transparent !important;
+}

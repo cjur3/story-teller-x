@@ -15,8 +15,12 @@
 
   "StoryTeller2.Settings.Theme": "Change the style of the story",
   "StoryTeller2.Settings.ThemeHint": "Changes the theme for all players",
+  "StoryTeller2.Settings.DefaultTheme": "Default Story Sheet theme",
+  "StoryTeller2.Settings.DefaultThemeHint": "Used when a Story Sheet journal does not have its own theme selected",
   "StoryTeller2.Settings.ThemeBook": "Book",
   "StoryTeller2.Settings.ThemeNewspaper": "Newspaper",
+  "StoryTeller2.Settings.ThemeShipCaptainsLog": "Ship Captain's Log",
+  "StoryTeller2.Settings.ThemeStarshipCaptainsLog": "Starship Captain's Log",
 
   "StoryTeller2.Settings.Size": "The size of the story on the screen",
   "StoryTeller2.Settings.SizeHint": "100% takes up almost the entire screen height, 80% takes up no more than 80% of the screen height",
