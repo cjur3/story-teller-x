@@ -1,11 +1,6 @@
-:root {
+.story-sheet.newspaper {
     --newspaper-text-color: #202326;
     --newspaper-border-color: #33383c99;
-}
-
-.story-sheet.newspaper:before{
-    background: url(newspaper.webp);
-    background-size: 100% 100%;
 }
 
 .story-sheet.newspaper .page-num:nth-child(2n) {
@@ -14,28 +9,6 @@
 
 .story-sheet.newspaper .page-num:nth-child(2n-1) {
     background: transparent;
-}
-
-.story-sheet.newspaper .page-num:nth-child(2n) > .journal-entry-page {
-    background: url(newspaper-left-page.webp);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
-
-.story-sheet.newspaper .page-num:nth-child(2n-1) > .journal-entry-page {
-    background: url(newspaper-right-page.webp);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
-
-.story-sheet.newspaper .page-num > .journal-entry-page {
-    width: 90% !important;
-    height: 90% !important;
-    margin: 5% !important;
-    box-sizing: border-box;
-    box-shadow: 0 5px 14px rgba(20, 20, 20, 0.32);
 }
 
 .story-sheet.newspaper .page-inner .editor,
@@ -48,30 +21,6 @@
     font-family: Georgia, Charter, "Times New Roman", serif;
     font-size: 1.2vh;
     font-weight: 500;
-}
-
-.story-sheet.newspaper .page.left > .page-inner {
-    padding: 1% 6% 6% 0.25%;
-    border-right: 2px solid var(--newspaper-border-color);
-}
-
-.story-sheet.newspaper .page.left > .page-inner img{
-    border: none;
-}
-
-.story-sheet.newspaper .page.left > .page-inner table {
-    background: none;
-}
-
-.story-sheet.newspaper .page.right > .page-inner .image-container {
-    -webkit-mask-image: url(newspaper-mask.webp);
-    -webkit-mask-size: 97% 100%;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-}
-
-.story-sheet.newspaper .story-submit {
-    top: 1%;
 }
 
 .story-sheet.newspaper .window-header {
@@ -92,10 +41,6 @@
     font-family: Georgia, Charter, "Times New Roman", serif;
     border-bottom: 2px solid var(--newspaper-border-color);
     padding-bottom: 10px;
-}
-
-.window-app.story-sheet.newspaper .window-content {
-    margin: 0 2% 3% 4%;
 }
 
 .story-sheet.newspaper .journal-page-arrow-left,

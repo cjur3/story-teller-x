@@ -4,8 +4,9 @@ import { SingleSheetMinimal } from "./sheets/single-sheet-minimal.js";
 import { StorySheetV2 as StorySheet } from "./sheets/story-sheet-v2.js";
 import { registerHotkeys } from "./scripts/config.js";
 import { StoryImporterDialog } from "./scripts/importer.js";
+import { MODULE_ID, getStoryThemeChoices } from "./scripts/constants.js";
 
-export const MODULE_ID = "story-teller-x";
+export { MODULE_ID } from "./scripts/constants.js";
 
 class StoryTeller2 {
   static SHEET_TYPES = {
@@ -41,17 +42,19 @@ class StoryTeller2 {
     for (let [className, localizationKey] of Object.entries(labels)) {
       if (className === "default") continue;
 
-      Journal.registerSheet("journals", types[className], {
-        types: ["base"],
-        makeDefault: false,
-        label: game.i18n.localize(localizationKey),
-        themes: className === "StorySheet" ? {
-          book: game.i18n.localize("StoryTeller2.Settings.ThemeBook"),
-          newspaper: game.i18n.localize("StoryTeller2.Settings.ThemeNewspaper"),
-          "captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeShipCaptainsLog"),
-          "starship-captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeStarshipCaptainsLog"),
-        } : undefined,
-      });
+      foundry.applications.apps.DocumentSheetConfig.registerSheet(
+        CONFIG.JournalEntry.documentClass,
+        // Preserve the legacy scope so existing per-document sheet selections
+        // continue to resolve after the Application V2 migration.
+        "journals",
+        types[className],
+        {
+          types: ["base"],
+          makeDefault: false,
+          label: game.i18n.localize(localizationKey),
+          themes: className === "StorySheet" ? getStoryThemeChoices() : undefined,
+        }
+      );
     }
 
     //game.system.documentTypes.JournalEntry = game.system.documentTypes.JournalEntry.concat(Object.keys(types)).sort();
@@ -118,17 +121,11 @@ class StoryTeller2 {
 }
 
 Hooks.on("ready", () => {
-  game.StoryTeller2.registerAddonSheet({
-    key: "StorySheet",
-    sheet: StorySheet,
-    label: "StoryTeller2.StorySheet",
-  });
-
   console.log("Story Teller 2 Journal | Ready");
 
   let pdfChoices = { "default": "Default" };
   for (let s of Object.values(CONFIG.JournalEntry.sheetClasses.base || {})) {
-    if (s.id !== "story-teller-x.StorySheet") {
+    if (s.cls !== StorySheet) {
       pdfChoices[s.id] = s.label;
     }
   }
@@ -154,15 +151,16 @@ Hooks.on("ready", () => {
   };
 });
 
-Hooks.on("init", () => {
+Hooks.once("init", () => {
   registerSettings();
   game.StoryTeller2 = new StoryTeller2();
   game.StoryTeller2.init();
+  game.StoryTeller2.registerAddonSheet({
+    key: "StorySheet",
+    sheet: StorySheet,
+    label: "StoryTeller2.StorySheet",
+  });
   CONFIG.debug.hooks = true;
-});
-
-Hooks.once("init", function () {
-  //CONFIG.debug.hooks = true;
 });
 
 Hooks.on("renderJournalDirectory", (app, html, data) => {
@@ -185,6 +183,52 @@ Hooks.on("renderJournalDirectory", (app, html, data) => {
 
     html.querySelector(".directory-header .header-actions").appendChild(importButton);
   }
+});
+
+function applyStoryThemeChoices(root, selectedTheme) {
+  const [sheetSelect, themeSelect] = root?.querySelectorAll("select") ?? [];
+  if (!sheetSelect || !themeSelect) return;
+
+  const selectedLabel = sheetSelect.selectedOptions[0]?.textContent;
+  const isStorySheet = sheetSelect.value.includes("StorySheet")
+    || selectedLabel === game.i18n.localize("StoryTeller2.StorySheet");
+  if (!isStorySheet) return;
+
+  const choices = getStoryThemeChoices();
+  selectedTheme ??= themeSelect.value;
+  const defaultLabel = themeSelect.querySelector('option[value=""]')?.textContent ?? "Default";
+  const replacement = themeSelect.cloneNode(false);
+  replacement.replaceChildren(
+    new Option(defaultLabel, ""),
+    ...Object.entries(choices).map(([value, label]) => new Option(label, value))
+  );
+  replacement.value = Object.hasOwn(choices, selectedTheme) ? selectedTheme : "";
+  replacement.disabled = false;
+  themeSelect.replaceWith(replacement);
+}
+
+Hooks.on("renderDocumentSheetConfig", (app, html) => {
+  const root = html instanceof HTMLElement
+    ? html
+    : html?.[0] instanceof HTMLElement
+      ? html[0]
+      : app.element;
+  if (!root) return;
+
+  applyStoryThemeChoices(root);
+  if (root.dataset.storyTellerThemeSelector === "true") return;
+  root.dataset.storyTellerThemeSelector = "true";
+
+  root.addEventListener("change", event => {
+    if (!(event.target instanceof HTMLSelectElement)) return;
+    if (!["sheetClass", "theme"].includes(event.target.name)) return;
+
+    // Foundry rebuilds the Theme field after every form change using the
+    // choices from when the dialog opened. Capture the theme before that
+    // happens, then restore both the choices and the selection.
+    const selectedTheme = event.target.name === "theme" ? event.target.value : undefined;
+    setTimeout(() => applyStoryThemeChoices(app.element, selectedTheme));
+  }, true);
 });
 
 function registerSettings() {
@@ -228,12 +272,7 @@ function registerSettings() {
     scope: "world",
     config: true,
     type: String,
-    choices: {
-      book: game.i18n.localize("StoryTeller2.Settings.ThemeBook"),
-      newspaper: game.i18n.localize("StoryTeller2.Settings.ThemeNewspaper"),
-      "captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeShipCaptainsLog"),
-      "starship-captains-log": game.i18n.localize("StoryTeller2.Settings.ThemeStarshipCaptainsLog"),
-    },
+    choices: getStoryThemeChoices(),
     default: "book",
     onChange: () => window.location.reload(),
   });

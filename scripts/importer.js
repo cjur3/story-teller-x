@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../main.mjs";
+import { MODULE_ID } from "./constants.js";
 
 export class StoryImporterDialog {
 

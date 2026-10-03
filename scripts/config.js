@@ -1,4 +1,10 @@
-import { MODULE_ID, SHEET_TYPES } from "../main.mjs";
+import { MODULE_ID } from "./constants.js";
+
+function getActiveStoryPager() {
+  const activeWindow = ui.activeWindow;
+  if (!activeWindow?.element?.classList?.contains("story-sheet")) return null;
+  return activeWindow.Pager ?? null;
+}
 
 export function registerHotkeys() {
   console.log("Story Teller 2 Journal | Registering Hotkeys");
@@ -8,13 +14,7 @@ export function registerHotkeys() {
     restricted: false,
     onDown: () => {},
     onUp: () => {
-      if (
-        ui.activeWindow &&
-        SHEET_TYPES &&
-        SHEET_TYPES.includes(ui.activeWindow.constructor.name)
-      ) {
-        ui.activeWindow.Pager.flipPrev();
-      }
+      getActiveStoryPager()?.flipPrev();
     },
   });
 
@@ -24,13 +24,7 @@ export function registerHotkeys() {
     restricted: false,
     onDown: () => {},
     onUp: () => {
-      if (
-        ui.activeWindow &&
-        SHEET_TYPES &&
-        SHEET_TYPES.includes(ui.activeWindow.constructor.name)
-      ) {
-        ui.activeWindow.Pager.flipNext();
-      }
+      getActiveStoryPager()?.flipNext();
     },
   });
 }

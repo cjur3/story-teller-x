@@ -1,11 +1,6 @@
-:root {
+.story-sheet.captains-log {
   --captains-log-text-color: #2b2924;
   --captains-log-rule-color: rgba(49, 72, 82, 0.3);
-}
-
-.story-sheet.captains-log::before {
-  background: url("captains-log.webp");
-  background-size: 100% 100%;
 }
 
 .story-sheet.captains-log .page-num {
@@ -18,14 +13,6 @@
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.15vh;
   line-height: 1.55;
-}
-
-.story-sheet.captains-log .page.left > .page-inner {
-  padding: 3% 7% 6% 5%;
-}
-
-.story-sheet.captains-log .page.right > .page-inner {
-  padding: 3% 5% 6% 7%;
 }
 
 .story-sheet.captains-log .window-header {
@@ -43,10 +30,6 @@
 .story-sheet.captains-log h3 {
   border-bottom: 1px solid var(--captains-log-rule-color);
   color: #344f59;
-}
-
-.window-app.story-sheet.captains-log .window-content {
-  margin: 0 3% 3% 3%;
 }
 
 .application.story-sheet.captains-log .page-num > .journal-entry-page {

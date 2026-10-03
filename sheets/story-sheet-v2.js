@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../main.mjs";
+import { MODULE_ID, STORY_THEMES, STORY_THEME_IDS } from "../scripts/constants.js";
 import { PageFlip } from "../scripts/pageflip/page-flip.module.mjs";
 
 const JournalEntrySheetV2 = foundry.applications.sheets.journal.JournalEntrySheet;
@@ -17,6 +17,7 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
   computerOpenSoundURL = `modules/${MODULE_ID}/sounds/computer-open.mp3`;
   computerPageSoundURL = `modules/${MODULE_ID}/sounds/computer-page.mp3`;
   Pager = null;
+  pageSaveTimer = null;
 
   get mode() { return this.constructor.VIEW_MODES.MULTIPLE; }
 
@@ -35,8 +36,8 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
   playSound(type) {
     const setting = type === "open" ? "bookOpenSound" : "pageTurnSound";
     if (!game.settings.get(MODULE_ID, setting)) return;
-    const starship = this.getTheme() === "starship-captains-log";
-    const src = starship
+    const computerSounds = STORY_THEMES[this.getTheme()]?.computerSounds ?? false;
+    const src = computerSounds
       ? (type === "open" ? this.computerOpenSoundURL : this.computerPageSoundURL)
       : this.pageFlipSoundURL;
     foundry.audio.AudioHelper.play({src, volume: 0.8, autoplay: true, loop: false}, false);
@@ -44,6 +45,9 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
 
   _getHeaderControls() {
     const controls = super._getHeaderControls();
+    if (this.isEditable) controls.unshift({
+      icon: "fas fa-file-circle-plus", label: "JOURNAL.AddPage", action: "createPage"
+    });
     if (game.user.isGM) controls.unshift({
       icon: "fas fa-crosshairs", label: "StoryTeller2.CopyID", action: "copyStoryId"
     });
@@ -69,7 +73,7 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
   async _onRender(context, options) {
     await super._onRender(context, options);
     const theme = this.getTheme();
-    this.element.classList.remove("book", "newspaper", "captains-log", "starship-captains-log");
+    this.element.classList.remove(...STORY_THEME_IDS);
     if (theme && theme !== "book") this.element.classList.add(theme);
     const filter = game.settings.get(MODULE_ID, "imageFilter");
     if (filter) this.element.classList.add(`filter-${filter}`);
@@ -83,8 +87,11 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
   _buildStoryPages() {
     const container = this.element.querySelector(".journal-entry-pages");
     if (!container) return;
-    const articles = Array.from(container.querySelectorAll(":scope > .journal-entry-page"));
-    if (!articles.length) return;
+    // Foundry may perform a partial V2 render while the PageFlip DOM is still
+    // present. Collect page articles at any depth so rebuilding is idempotent.
+    const articles = Array.from(
+      container.querySelectorAll(".journal-entry-page:not(.pages-content)")
+    );
 
     const story = document.createElement("div");
     story.id = `story-${this.document.id}`;
@@ -96,6 +103,7 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
       back.type = "button";
       back.className = "back-to-toc icon fa-solid fa-book-open";
       back.title = game.i18n.localize("STORYTELLER.BackToTOC");
+      article.querySelectorAll(":scope > .back-to-toc").forEach(button => button.remove());
       article.append(back);
       const wrapper = this._createPageWrapper(index + 1);
       wrapper.prepend(article);
@@ -114,14 +122,22 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
       event.stopPropagation();
       this.Pager.turnToPage(0);
     }));
-    story.querySelectorAll(".storyteller-toc-entry").forEach(entry => entry.addEventListener("click", () => {
-      const target = story.querySelector(`.journal-entry-page[data-page-id="${entry.dataset.pageId}"]`)
-        ?.closest(".page-num");
-      if (target) this.Pager.turnToPage(Array.from(story.querySelectorAll(".page-num")).indexOf(target));
-    }));
+    story.querySelectorAll(".storyteller-toc-entry").forEach(entry => {
+      const openPage = () => {
+        const target = story.querySelector(`.journal-entry-page[data-page-id="${entry.dataset.pageId}"]`)
+          ?.closest(".page-num");
+        if (target) this.Pager.turnToPage(Array.from(story.querySelectorAll(".page-num")).indexOf(target));
+      };
+      entry.addEventListener("click", openPage);
+      entry.addEventListener("keydown", event => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openPage();
+      });
+    });
     this.Pager.on("flip", event => {
       this.stylePageTurnButtons(event.data, totalPages);
-      setPage(this.document.id, event.data);
+      this.queuePageSave(event.data);
       this.playSound("page");
     });
   }
@@ -141,6 +157,8 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
       const item = document.createElement("li");
       item.className = "directory-item storyteller-toc-entry";
       item.dataset.pageId = page.id;
+      item.tabIndex = 0;
+      item.setAttribute("role", "button");
       const label = document.createElement("span");
       label.className = "page-title";
       label.textContent = page.name;
@@ -171,6 +189,10 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
       const arrow = document.createElement("button");
       arrow.type = "button";
       arrow.className = `journal-page-arrow-${direction} storyteller2-page-entry-nav ${direction === "left" ? "prev" : "next"}`;
+      const localizationKey = direction === "left" ? "STORYTELLER2.PreviousPage" : "STORYTELLER2.NextPage";
+      const label = game.i18n.localize(localizationKey);
+      arrow.title = label;
+      arrow.setAttribute("aria-label", label);
       arrow.addEventListener("click", () => direction === "left" ? this.Pager.flipPrev() : this.Pager.flipNext());
       wrapper.append(arrow);
     }
@@ -178,7 +200,7 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
   }
 
   getPager(element, savedPage) {
-    const starship = this.getTheme() === "starship-captains-log";
+    const computerTheme = STORY_THEMES[this.getTheme()]?.computerSounds ?? false;
     return new PageFlip(element, {
       width: element.offsetWidth / 2,
       height: element.offsetHeight,
@@ -187,9 +209,9 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
       usePortrait: false,
       useMouseEvents: false,
       showPageCorners: false,
-      maxShadowOpacity: starship ? 0.1 : 0.9,
-      drawShadow: !starship,
-      flippingTime: starship ? 280 : 1000,
+      maxShadowOpacity: computerTheme ? 0.1 : 0.9,
+      drawShadow: !computerTheme,
+      flippingTime: computerTheme ? 280 : 1000,
       showCover: true,
       clickEventClasses: ["editor-edit", "storyteller2-page-entry-nav", "back-to-toc"],
     });
@@ -202,9 +224,19 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
       .forEach(button => button.hidden = pageNumber + 1 >= totalPages);
   }
 
+  queuePageSave(page) {
+    window.clearTimeout(this.pageSaveTimer);
+    this.pageSaveTimer = window.setTimeout(() => {
+      this.pageSaveTimer = null;
+      void setPage(this.document.id, page);
+    }, 150);
+  }
+
   _onClose(options) {
+    window.clearTimeout(this.pageSaveTimer);
+    this.pageSaveTimer = null;
     if (this.Pager) {
-      setPage(this.document.id, this.Pager.pages?.currentPageIndex ?? 0);
+      void setPage(this.document.id, this.Pager.pages?.currentPageIndex ?? 0);
       this.Pager.destroy();
       this.Pager = null;
     }
@@ -212,8 +244,16 @@ export class StorySheetV2 extends JournalEntrySheetV2 {
   }
 }
 
-function getBookWidth() { return (bookWidth / bookHeight) * getBookHeight(); }
-function getBookHeight() { return window.innerHeight * (game.settings.get(MODULE_ID, "size") / 100); }
+function getBookDimensions() {
+  const scale = game.settings.get(MODULE_ID, "size") / 100;
+  const availableHeight = window.innerHeight * scale;
+  const availableWidth = window.innerWidth * scale;
+  const height = Math.min(availableHeight, availableWidth * (bookHeight / bookWidth));
+  return {height, width: height * (bookWidth / bookHeight)};
+}
+
+function getBookWidth() { return getBookDimensions().width; }
+function getBookHeight() { return getBookDimensions().height; }
 
 async function setPage(id, page) {
   const pages = game.settings.get(MODULE_ID, "pages");

@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../main.mjs";
+import { MODULE_ID } from "../scripts/constants.js";
 import { PageFlip } from "../scripts/pageflip/page-flip.module.mjs";
 
 const bookSizeCorrection = 1;
@@ -7,8 +7,6 @@ const bookHeight = 937;
 
 export class StorySheet extends JournalSheet {
   pageFlipSoundURL = `modules/${MODULE_ID}/sounds/paper-flip.mp3`;
-  computerOpenSoundURL = `modules/${MODULE_ID}/sounds/computer-open.mp3`;
-  computerPageSoundURL = `modules/${MODULE_ID}/sounds/computer-page.mp3`;
   static classes = ["sheet", "story-sheet", "storyteller2-loading"];
 
   constructor(...args) {
@@ -38,9 +36,7 @@ export class StorySheet extends JournalSheet {
     if (game.settings.get(`${MODULE_ID}`, "bookOpenSound")) {
       foundry.audio.AudioHelper.play(
         {
-          src: this.getTheme() === "starship-captains-log"
-            ? this.computerOpenSoundURL
-            : this.pageFlipSoundURL,
+          src: this.pageFlipSoundURL,
           volume: 0.8,
           autoplay: true,
           loop: false,
@@ -48,12 +44,6 @@ export class StorySheet extends JournalSheet {
         false
       );
     }
-  }
-
-  getTheme() {
-    return this.object.getFlag(MODULE_ID, "theme")
-      || foundry.applications.apps.DocumentSheetConfig.getSheetThemeForDocument(this.object)
-      || game.settings.get(MODULE_ID, "theme");
   }
 
   /** @inheritdoc */
@@ -104,9 +94,6 @@ export class StorySheet extends JournalSheet {
     this.sound();
     await super._render(force, options);
     console.log("Story Teller 2 | Rendering Story Sheet");
-
-    const theme = this.getTheme();
-    if (theme && theme !== "book") this.element[0].classList.add(theme);
 
     let filter = game.settings.get(MODULE_ID, "imageFilter");
     if (filter) this.element[0].classList.add(`filter-${filter}`);
@@ -182,9 +169,7 @@ export class StorySheet extends JournalSheet {
       if (game.settings.get(`${MODULE_ID}`, "pageTurnSound")) {
         foundry.audio.AudioHelper.play(
           {
-            src: this.getTheme() === "starship-captains-log"
-              ? this.computerPageSoundURL
-              : this.pageFlipSoundURL,
+            src: this.pageFlipSoundURL,
             volume: 0.8,
             autoplay: true,
             loop: false,
@@ -209,7 +194,6 @@ export class StorySheet extends JournalSheet {
     var jepHeight = journalEntryPages.offsetHeight;
     var jepWidth = journalEntryPages.offsetWidth / 2;
 
-    const isStarship = this.getTheme() === "starship-captains-log";
     return new PageFlip(document.getElementById("story-" + storyId), {
       width: jepWidth,
       height: jepHeight,
@@ -218,9 +202,7 @@ export class StorySheet extends JournalSheet {
       usePortrait: false,
       useMouseEvents: false,
       showPageCorners: false,
-      maxShadowOpacity: isStarship ? 0.1 : 0.9,
-      drawShadow: !isStarship,
-      flippingTime: isStarship ? 280 : 1000,
+      maxShadowOpacity: 0.9, // Half shadow intensity
       showCover: true,
       clickEventClasses: [
         "editor-edit",

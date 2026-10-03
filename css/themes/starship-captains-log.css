@@ -1,14 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600&display=swap");
+@font-face {
+  font-family: "Oxanium";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../../fonts/oxanium/Oxanium-wght.ttf") format("truetype");
+}
 
-:root {
+.story-sheet.starship-captains-log {
   --starship-log-text-color: #d8e9f1;
   --starship-log-heading-color: #f3b267;
   --starship-log-accent-color: rgba(121, 203, 231, 0.55);
-}
-
-.story-sheet.starship-captains-log::before {
-  background: url("starship-captains-log.webp");
-  background-size: 100% 100%;
 }
 
 .story-sheet.starship-captains-log .page-num {
@@ -26,14 +27,6 @@
   font-size: 1.12vh;
   line-height: 1.5;
   text-shadow: 0 0 6px rgba(108, 190, 221, 0.25);
-}
-
-.story-sheet.starship-captains-log .page.left > .page-inner {
-  padding: 7% 6% 8% 8%;
-}
-
-.story-sheet.starship-captains-log .page.right > .page-inner {
-  padding: 7% 8% 8% 6%;
 }
 
 .story-sheet.starship-captains-log .journal-entry-page {
@@ -125,10 +118,6 @@
   opacity: 1;
 }
 
-.window-app.story-sheet.starship-captains-log .window-content {
-  margin: 0 3% 3% 3%;
-}
-
 .application.story-sheet.starship-captains-log .page-num > .journal-entry-page {
   background: transparent !important;
   border-color: transparent !important;
@@ -149,17 +138,4 @@
   background: rgba(7, 21, 34, 0.42) !important;
   border-color: rgba(136, 231, 255, 0.65) !important;
   text-shadow: 0 0 5px rgba(136, 231, 255, 0.75);
-}
-
-.application.story-sheet.starship-captains-log .back-to-toc {
-  top: auto !important;
-  bottom: 2% !important;
-  left: 2% !important;
-  right: auto !important;
-}
-
-.application.story-sheet.starship-captains-log .editor-edit {
-  top: 2% !important;
-  left: auto !important;
-  right: 2% !important;
 }
