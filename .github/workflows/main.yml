@@ -118,6 +118,7 @@ jobs:
             sounds/                              \
             scripts/                             \
             css/                                 \
+            fonts/                               \
             packs/                               \
             img/                                 \
             lang/                                \

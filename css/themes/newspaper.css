@@ -1,56 +1,103 @@
-:root {
-    --newspaper-text-color: #47423b;
-    --newspaper-border-color: #47423b94;
+.story-sheet.newspaper {
+    --newspaper-text-color: #202326;
+    --newspaper-border-color: #33383c99;
 }
 
-.story-sheet.newspaper:before{
-    background: url(newspaper.webp);
-    background-size: 100% 100%;
+.story-sheet.newspaper .page-num:nth-child(2n) {
+    background: transparent;
 }
 
-.story-sheet.newspaper .page-inner .editor {
-    font-family: 'Times New Roman', serif;
+.story-sheet.newspaper .page-num:nth-child(2n-1) {
+    background: transparent;
+}
+
+.story-sheet.newspaper .page-inner .editor,
+.story-sheet.newspaper .journal-page-content,
+.story-sheet.newspaper .journal-page-header h1,
+.story-sheet.newspaper .pages-list,
+.story-sheet.newspaper input,
+.story-sheet.newspaper button {
+    color: var(--newspaper-text-color);
+    font-family: Georgia, Charter, "Times New Roman", serif;
     font-size: 1.2vh;
-    font-weight: inherit;
-}
-
-.story-sheet.newspaper .page.left > .page-inner {
-    padding: 1% 6% 6% 0.25%;
-    border-right: 2px solid var(--newspaper-border-color);
-}
-
-.story-sheet.newspaper .page.left > .page-inner img{
-    border: none;
-}
-
-.story-sheet.newspaper .page.left > .page-inner table {
-    background: none;
-}
-
-.story-sheet.newspaper .page.right > .page-inner .image-container {
-    -webkit-mask-image: url(newspaper-mask.webp);
-    -webkit-mask-size: 97% 100%;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-}
-
-.story-sheet.newspaper .story-submit {
-    top: 1%;
+    font-weight: 500;
 }
 
 .story-sheet.newspaper .window-header {
     color: var(--newspaper-text-color);
 }
 
-.story-sheet.newspaper h1{
+.story-sheet.newspaper .page-num .journal-page-header h1,
+.story-sheet.newspaper .page-num.num-start h1 {
+    color: var(--newspaper-text-color);
+    font-family: Georgia, Charter, "Times New Roman", serif;
     border-bottom: 7px double var(--newspaper-border-color);
+    font-size: 3.2em !important;
+    line-height: 1.15;
 }
 
 .story-sheet.newspaper h2 {
+    color: var(--newspaper-text-color);
+    font-family: Georgia, Charter, "Times New Roman", serif;
     border-bottom: 2px solid var(--newspaper-border-color);
     padding-bottom: 10px;
 }
 
-.window-app.story-sheet.newspaper .window-content {
-    margin: 0 2% 3% 4%;
+.story-sheet.newspaper .journal-page-arrow-left,
+.story-sheet.newspaper .journal-page-arrow-right {
+    background: #202326 !important;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+    opacity: 1 !important;
+    z-index: 1000 !important;
+}
+
+.story-sheet.newspaper .page-num.num-start .storyteller-toc-entry {
+    color: #202326;
+    border-bottom: 1px solid rgba(32, 35, 38, 0.22);
+    font-family: Georgia, Charter, "Times New Roman", serif;
+    font-size: 1.35rem;
+}
+
+.application.story-sheet.newspaper .page-num.num-start > .journal-entry-page.pages-content {
+    width: 87% !important;
+    height: 90% !important;
+    margin: 5% 5% 5% 8% !important;
+}
+
+.application.story-sheet.newspaper .page-num.num-start .content-inner {
+    padding: 5% 7% 4% !important;
+}
+
+/* The spread already contains the newspaper paper. Avoid laying a second,
+   brighter sheet over it so text feels printed on the same physical page. */
+.application.story-sheet.newspaper .page-num > .journal-entry-page,
+.application.story-sheet.newspaper .page-num:nth-child(2n) > .journal-entry-page,
+.application.story-sheet.newspaper .page-num:nth-child(2n-1) > .journal-entry-page {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.application.story-sheet.newspaper .page-num:not(.num-start) > .journal-entry-page {
+    width: 87% !important;
+    margin: 5% 5% 5% 8% !important;
+}
+
+.application.story-sheet.newspaper .journal-page-arrow-left,
+.application.story-sheet.newspaper .journal-page-arrow-right {
+    width: 44px !important;
+    height: 44px !important;
+    mask-size: 42px !important;
+    -webkit-mask-size: 42px 42px !important;
+    background-color: #111518 !important;
+    filter: drop-shadow(0 0 2px #f4f4f0) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) !important;
+}
+
+.application.story-sheet.newspaper .journal-page-arrow-left {
+    left: 18px !important;
+    bottom: 18px !important;
+}
+
+.application.story-sheet.newspaper .journal-page-arrow-right {
+    right: 18px !important;
+    bottom: 18px !important;
 }

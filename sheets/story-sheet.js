@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../main.mjs";
+import { MODULE_ID } from "../scripts/constants.js";
 import { PageFlip } from "../scripts/pageflip/page-flip.module.mjs";
 
 const bookSizeCorrection = 1;

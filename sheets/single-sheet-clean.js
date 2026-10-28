@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../main.mjs";
+import { MODULE_ID } from "../scripts/constants.js";
 
 const bookSizeCorrection = 1;
 const bookWidth = 695;

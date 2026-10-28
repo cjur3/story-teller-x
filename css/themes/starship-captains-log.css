@@ -1,0 +1,141 @@
+@font-face {
+  font-family: "Oxanium";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../../fonts/oxanium/Oxanium-wght.ttf") format("truetype");
+}
+
+.story-sheet.starship-captains-log {
+  --starship-log-text-color: #d8e9f1;
+  --starship-log-heading-color: #f3b267;
+  --starship-log-accent-color: rgba(121, 203, 231, 0.55);
+}
+
+.story-sheet.starship-captains-log .page-num {
+  background: transparent;
+}
+
+.story-sheet.starship-captains-log .page-inner .editor,
+.story-sheet.starship-captains-log .journal-page-content,
+.story-sheet.starship-captains-log .journal-page-header h1,
+.story-sheet.starship-captains-log .pages-list,
+.story-sheet.starship-captains-log input,
+.story-sheet.starship-captains-log button {
+  color: var(--starship-log-text-color);
+  font-family: "Oxanium", "Trebuchet MS", sans-serif;
+  font-size: 1.12vh;
+  line-height: 1.5;
+  text-shadow: 0 0 6px rgba(108, 190, 221, 0.25);
+}
+
+.story-sheet.starship-captains-log .journal-entry-page {
+  width: 82% !important;
+  height: 78% !important;
+  margin: 11% 9% !important;
+  padding: 4% 5% !important;
+  background:
+    linear-gradient(rgba(8, 25, 43, 0.97), rgba(7, 22, 39, 0.97)),
+    repeating-linear-gradient(0deg, transparent 0 38px, rgba(101, 187, 218, 0.08) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 38px, rgba(101, 187, 218, 0.06) 39px 40px);
+  border: 1px solid rgba(118, 214, 240, 0.35);
+  box-sizing: border-box;
+}
+
+.story-sheet.starship-captains-log .window-header {
+  color: #f3b267;
+}
+
+.story-sheet.starship-captains-log .page-num .journal-page-header h1,
+.story-sheet.starship-captains-log .page-num.num-start h1 {
+  border-bottom: 3px solid var(--starship-log-heading-color);
+  color: var(--starship-log-heading-color);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: "Oxanium", "Trebuchet MS", sans-serif;
+  font-size: 2.7em !important;
+  line-height: 1.15;
+}
+
+.story-sheet.starship-captains-log h2,
+.story-sheet.starship-captains-log h3 {
+  border-bottom: 1px solid var(--starship-log-accent-color);
+  color: #9bd8ec;
+  letter-spacing: 0.04em;
+  font-family: "Oxanium", "Trebuchet MS", sans-serif;
+}
+
+.story-sheet.starship-captains-log a {
+  color: #9bd8ec;
+}
+
+.story-sheet.starship-captains-log .journal-page-arrow-left,
+.story-sheet.starship-captains-log .journal-page-arrow-right {
+  background: #88e7ff !important;
+  filter: drop-shadow(0 0 5px rgba(136, 231, 255, 0.85));
+  width: 40px !important;
+  height: 40px !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+}
+
+.story-sheet.starship-captains-log .back-to-toc,
+.story-sheet.starship-captains-log .editor-edit,
+.story-sheet.starship-captains-log .window-header a {
+  color: #88e7ff !important;
+  opacity: 0.9;
+  text-shadow: 0 0 6px rgba(136, 231, 255, 0.85);
+}
+
+.story-sheet.starship-captains-log .create {
+  color: #071522;
+  background: #f4b64e;
+  border: 1px solid #88e7ff;
+  box-shadow: 0 0 8px rgba(244, 182, 78, 0.55);
+}
+
+.story-sheet.starship-captains-log .page-num.num-start .content-inner {
+  padding: 5% 7% 4% !important;
+}
+
+.story-sheet.starship-captains-log .page-num.num-start .storyteller-toc-entry {
+  color: #d8f4ff;
+  border-bottom: 1px solid rgba(136, 231, 255, 0.35);
+  font-family: "Oxanium", "Trebuchet MS", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-shadow: 0 0 6px rgba(136, 231, 255, 0.5);
+}
+
+.story-sheet.starship-captains-log .page-num.num-start .storyteller-toc-entry:hover {
+  color: #ffffff;
+  background: rgba(136, 231, 255, 0.12);
+}
+
+.story-sheet.starship-captains-log .page-num.num-start .create {
+  color: #071522 !important;
+  opacity: 1;
+}
+
+.application.story-sheet.starship-captains-log .page-num > .journal-entry-page {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.application.story-sheet.starship-captains-log .page-num.num-start > .journal-entry-page.pages-content {
+  width: 70% !important;
+  height: 70% !important;
+  margin: 15% !important;
+}
+
+.application.story-sheet.starship-captains-log .page-num.num-start .content-inner {
+  padding: 2% 5% 3% !important;
+}
+
+.application.story-sheet.starship-captains-log .page-num.num-start .create {
+  color: #d8f4ff !important;
+  background: rgba(7, 21, 34, 0.42) !important;
+  border-color: rgba(136, 231, 255, 0.65) !important;
+  text-shadow: 0 0 5px rgba(136, 231, 255, 0.75);
+}
