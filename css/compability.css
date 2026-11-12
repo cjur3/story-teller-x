@@ -17,14 +17,6 @@ body.-emu .window-app.story-sheet {
     margin: 0 4% 3% 4%;
 }
 
-.-emu-layout body.-emu .window-app.newspaper .window-content {
-    margin: 0 2% 3% 4%;
-}
-
-.-emu-layout body.-emu .window-app.newspaper .story-submit {
-    top: -1%!important;
-}
-
 body.-emu .window-app.story-sheet .window-content {
     background: none!important;
 }

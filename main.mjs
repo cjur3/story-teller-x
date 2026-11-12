@@ -4,7 +4,6 @@ import { SingleSheetMinimal } from "./sheets/single-sheet-minimal.js";
 import { StorySheet } from "./sheets/story-sheet.js";
 import { registerHotkeys } from "./scripts/config.js";
 import { toElement } from "./scripts/compat.mjs";
-import { registerAlignmentSetting } from "./scripts/book-alignment.mjs";
 import { StoryImporterDialog } from "./scripts/importer.js";
 
 export const MODULE_ID = "story-teller-x";
@@ -196,7 +195,6 @@ Hooks.on("renderJournalDirectory", (app, html, data) => {
 });
 
 function registerSettings() {
-  registerAlignmentSetting();
   game.settings.register(`${MODULE_ID}`, "size", {
     name: game.i18n.localize("StoryTeller2.Settings.Size"),
     hint: game.i18n.localize("StoryTeller2.Settings.SizeHint"),

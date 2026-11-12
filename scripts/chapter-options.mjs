@@ -44,12 +44,16 @@ export function openChapterOptionsDialog(page) {
     (f) =>
       `<option value="${f}" ${f === current.filter ? "selected" : ""}>${t(`STORYTELLER.Chapter.filters.${f || "none"}`)}</option>`
   ).join("");
-  const content = `
-    <div class="form-group">
+  // pictures never show a title in the book
+  const titleRow =
+    page.type === "image"
+      ? ""
+      : `<div class="form-group">
       <label>${t("STORYTELLER.Chapter.showTitle")}</label>
       <div class="form-fields"><input type="checkbox" name="showTitle" ${current.showTitle ? "checked" : ""}></div>
       <p class="hint">${t("STORYTELLER.Chapter.showTitleHint")}</p>
-    </div>
+    </div>`;
+  const content = `${titleRow}
     <div class="form-group">
       <label>${t("STORYTELLER.Chapter.filter")}</label>
       <div class="form-fields"><select name="filter">${filters}</select></div>
@@ -64,7 +68,7 @@ export function openChapterOptionsDialog(page) {
     okLabel: t("STORYTELLER.BookOptionsSave"),
     okIcon: "fas fa-save",
     callback: (root) => ({
-      showTitle: root.querySelector('input[name="showTitle"]').checked,
+      showTitle: root.querySelector('input[name="showTitle"]')?.checked ?? current.showTitle,
       filter: root.querySelector('select[name="filter"]').value,
     }),
   });

@@ -26,7 +26,7 @@ import {
   numberLeaves,
 } from "../scripts/pagination/leaves.mjs";
 import { applySkin, defaultFontColor, skinSelectHtml } from "../scripts/book-skins.mjs";
-import { applyAlignment, openAlignmentDialog } from "../scripts/book-alignment.mjs";
+import { setBookUnits } from "../scripts/book-units.mjs";
 import {
   canConfigureChapter,
   getChapterOptions,
@@ -94,15 +94,6 @@ export class StorySheet extends JournalSheet {
         class: "switch-copyid",
         icon: "fas fa-crosshairs",
         onclick: (ev) => this._onCopyID(ev),
-      });
-    }
-
-    if (game.user.isGM) {
-      buttons.unshift({
-        label: "STORYTELLER.Align.button",
-        class: "switch-book-align",
-        icon: "fas fa-ruler-combined",
-        onclick: () => openAlignmentDialog(this, getBookOptions(this.object)),
       });
     }
 
@@ -215,7 +206,7 @@ export class StorySheet extends JournalSheet {
     this.element[0].classList.toggle("st-auto-split", autoSplit);
 
     applySkin(this.element[0], getBookOptions(this.object));
-    applyAlignment(this.element[0], getBookOptions(this.object), this._alignPreview);
+    setBookUnits(this.element[0]);
 
     const fontFamily = getBookOption(this.object, "fontFamily");
     this.element[0].classList.toggle("st-custom-font", !!fontFamily);

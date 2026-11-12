@@ -1,19 +1,5 @@
 This is a Rerelease of the StoryTeller 2 module of jfrazier (https://github.com/jfrazierjr/storyteller2) which was a Rerelease of the original StoryTeller module written by Xbozon (https://github.com/Xbozon/storyteller).
 
-Things done in this Rerelease:
-
-* Fixing pages being transparent
-* Fixing pages being misaligned with the actual book
-
-Things I'd love to implement in a future release:
-
-* New more immersive page controls
-* Themes including demonic book themes
-* Automatic Page splitting
-* An e-book importer that allows importing non-copyrighted books
-* Fixing the go-to chapter button
-* Adding CSS Filter overlay for images
-
 # StoryTeller X for Foundry VTT
 
 A small modification that allows you to present the story in the game as an open book. Inspired by the storyteller from Pathfinder: Kingmaker.
@@ -22,11 +8,11 @@ This mod is an update to the original Storyteller mod by Xbozon (https://github.
 
 ## How it looks
 
+New here? The [user guide](docs/GUIDE.md) explains the whole module step by step, without technical details.
+
 Each Journal Page can be selected by clicking on the page from the Table of Contents index.
 
 Additionally, you may use the page navigation icons in the lower left or right hand corners as well as utilize the left or right arrow keys on your keyboard (editable via the core keybindings within foundry.)
-
-There are currently 2 settings.
 
 ## How it works
 

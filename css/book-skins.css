@@ -7,7 +7,7 @@
   --st-page-right-img: url(../img/book/page-right-beige.webp);
   --st-book-default-color: #48392e;
 
-  /* Alignment, tuned with the "Align book" dialog. Unitless numbers:
+  /* Alignment of the artwork and the text area. Unitless numbers:
      1 = 1% of the book width (w) or of the book height (h). The unit px values
      are set by the sheet, so the layout scales with the book (and the artwork). */
   --st-w: calc(0.01 * 80vh * 1.4835);
@@ -91,7 +91,7 @@
   background-size: 100% 100%; /* show the whole page artwork, never crop its edges */
 }
 
-/* Tuned with the "Align book" dialog (brown cover). The page artwork decides the
+/* Tuned by eye with the brown cover. The page artwork decides the
    geometry, so these apply to every cover with these page colors. */
 .story-sheet.st-page-color-beige,
 .story-sheet.st-page-color-black {

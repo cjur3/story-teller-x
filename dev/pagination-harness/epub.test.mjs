@@ -1,5 +1,3 @@
-// Test for scripts/zip.mjs and scripts/epub.mjs with two small EPUB fixtures.
-// Run: npm i --no-save jsdom && node dev/pagination-harness/epub.test.mjs
 import { JSDOM } from "jsdom";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -9,7 +7,6 @@ const { ZipReader } = await import(dir + "zip.mjs");
 const { parseEpub, resolvePath, tidyTitle, dropNumberedSections } = await import(dir + "epub.mjs");
 const fixture = (name) => new ZipReader(fs.readFileSync(new URL(`./fixtures/${name}`, import.meta.url)));
 
-// paths and titles
 assert.equal(resolvePath("OEBPS/a/b.xhtml", "../img/x%20y.png#frag"), "OEBPS/img/x y.png");
 assert.equal(resolvePath("content.opf", "ch1.xhtml"), "ch1.xhtml");
 assert.equal(tidyTitle("CHAPTER IV."), "Chapter IV.");
@@ -20,14 +17,12 @@ assert.equal(tidyTitle("II. THE RED-HEADED LEAGUE"), "II. The Red-headed League"
 assert.equal(tidyTitle("I. A SCANDAL IN BOHEMIA"), "I. A Scandal in Bohemia");
 assert.equal(tidyTitle("CHAPTER I. Down the Rabbit-Hole"), "Chapter I. Down the Rabbit-Hole");
 
-// sub entries that are only numbers are sections of their story, not chapters
 const toc = [
   { title: "I. A SCANDAL IN BOHEMIA", depth: 0 }, { title: "I.", depth: 1 }, { title: "II.", depth: 1 },
   { title: "II. THE RED-HEADED LEAGUE", depth: 0 }, { title: "Part One", depth: 0 }, { title: "Chapter 1", depth: 1 },
 ];
 assert.deepEqual(dropNumberedSections(toc).map((e) => e.title), ["I. A SCANDAL IN BOHEMIA", "II. THE RED-HEADED LEAGUE", "Part One", "Chapter 1"]);
 
-// zip: stored and deflated entries
 const zip = fixture("with-toc.epub");
 assert.ok(zip.names.includes("OEBPS/one.xhtml"));
 assert.equal(await zip.text("mimetype"), "application/epub+zip");
@@ -35,7 +30,6 @@ assert.match(await zip.text("OEBPS/one.xhtml"), /CHAPTER II/);
 await assert.rejects(zip.bytes("nope"), /not in archive/);
 assert.throws(() => new ZipReader(new Uint8Array(100)), /Not a ZIP/);
 
-// book with a table of contents; two chapters share one file
 let book = await parseEpub(zip);
 assert.equal(book.title, "Mini Book");
 assert.equal(book.author, "A. Writer");
