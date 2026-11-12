@@ -16,7 +16,7 @@ export class StoryImporterDialog {
             fontColor: defaultFontColor(DEFAULT_PAGE),
         });
         promptDialog({
-            title: game.i18n.localize("STORYTELLER.ImporterTitle") || "StoryTeller X E-book Importer",
+            title: game.i18n.localize("StoryTellerX.ImporterTitle") || "StoryTeller X E-book Importer",
             icon: "fas fa-book",
             width: 500,
             resizable: true,

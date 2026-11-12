@@ -42,30 +42,30 @@ export function openChapterOptionsDialog(page) {
   const current = getChapterOptions(page);
   const filters = CHAPTER_FILTERS.map(
     (f) =>
-      `<option value="${f}" ${f === current.filter ? "selected" : ""}>${t(`STORYTELLER.Chapter.filters.${f || "none"}`)}</option>`
+      `<option value="${f}" ${f === current.filter ? "selected" : ""}>${t(`StoryTellerX.Chapter.filters.${f || "none"}`)}</option>`
   ).join("");
   // pictures never show a title in the book
   const titleRow =
     page.type === "image"
       ? ""
       : `<div class="form-group">
-      <label>${t("STORYTELLER.Chapter.showTitle")}</label>
+      <label>${t("StoryTellerX.Chapter.showTitle")}</label>
       <div class="form-fields"><input type="checkbox" name="showTitle" ${current.showTitle ? "checked" : ""}></div>
-      <p class="hint">${t("STORYTELLER.Chapter.showTitleHint")}</p>
+      <p class="hint">${t("StoryTellerX.Chapter.showTitleHint")}</p>
     </div>`;
   const content = `${titleRow}
     <div class="form-group">
-      <label>${t("STORYTELLER.Chapter.filter")}</label>
+      <label>${t("StoryTellerX.Chapter.filter")}</label>
       <div class="form-fields"><select name="filter">${filters}</select></div>
-      <p class="hint">${t("STORYTELLER.Chapter.filterHint")}</p>
+      <p class="hint">${t("StoryTellerX.Chapter.filterHint")}</p>
     </div>`;
 
   return promptDialog({
-    title: `${t("STORYTELLER.Chapter.title")}: ${page.name}`,
+    title: `${t("StoryTellerX.Chapter.title")}: ${page.name}`,
     icon: "fas fa-gear",
     width: 440,
     content,
-    okLabel: t("STORYTELLER.BookOptionsSave"),
+    okLabel: t("StoryTellerX.BookOptionsSave"),
     okIcon: "fas fa-save",
     callback: (root) => ({
       showTitle: root.querySelector('input[name="showTitle"]')?.checked ?? current.showTitle,

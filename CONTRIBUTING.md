@@ -20,6 +20,7 @@ Thanks for helping out! A few rules keep the module maintainable and legally cle
 4. **Every PR updates `CHANGELOG.md`** under `## [Unreleased]`. Use the sections
    Added, Changed, Fixed, Removed. PRs that truly need no entry (CI only,
    typos) carry the `skip-changelog` label.
+5. **Localization keys start with `StoryTellerX.`** (for example `StoryTellerX.Chapter.title`). Add every user-visible text to `lang/en.json` and never hard-code it.
 
 ## Releases
 

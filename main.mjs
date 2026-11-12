@@ -15,7 +15,7 @@ class StoryTeller2 {
   };
 
   static SHEET_LABELS = {
-    story: "STORYTELLER.StoryEntry",
+    story: "StoryTellerX.StoryEntry",
   };
 
   static getDocumentTypes() {
@@ -99,7 +99,7 @@ class StoryTeller2 {
    *
    *   @param key: "StorySheet",  -- Unique key, must not overlap with other keys. It is used to access the object.
    *   @param sheet: StorySheet, -- The class that implements the settings for the new journal. You don't need to create an instance, the class description itself is passed.
-   *   @param label: "StoryTeller2.StorySheet", -- Key-identifier of the string for translation.
+   *   @param label: "StoryTellerX.StorySheet", -- Key-identifier of the string for translation.
    */
   registerAddonSheet(s) {
     let types = {};
@@ -124,7 +124,7 @@ Hooks.on("ready", () => {
   game.StoryTeller2.registerAddonSheet({
     key: "StorySheet",
     sheet: StorySheet,
-    label: "StoryTeller2.StorySheet",
+    label: "StoryTellerX.StorySheet",
   });
 
   console.log("Story Teller 2 Journal | Ready");
@@ -196,8 +196,8 @@ Hooks.on("renderJournalDirectory", (app, html, data) => {
 
 function registerSettings() {
   game.settings.register(`${MODULE_ID}`, "size", {
-    name: game.i18n.localize("StoryTeller2.Settings.Size"),
-    hint: game.i18n.localize("StoryTeller2.Settings.SizeHint"),
+    name: game.i18n.localize("StoryTellerX.Settings.Size"),
+    hint: game.i18n.localize("StoryTellerX.Settings.SizeHint"),
     scope: "client",
     requiresReload: true,
     type: Number,
@@ -212,8 +212,8 @@ function registerSettings() {
   });
 
   game.settings.register(`${MODULE_ID}`, "useDialogV2", {
-    name: game.i18n.localize("StoryTeller2.Settings.UseDialogV2"),
-    hint: game.i18n.localize("StoryTeller2.Settings.UseDialogV2Hint"),
+    name: game.i18n.localize("StoryTellerX.Settings.UseDialogV2"),
+    hint: game.i18n.localize("StoryTellerX.Settings.UseDialogV2Hint"),
     scope: "client",
     type: Boolean,
     default: !!foundry.applications?.api?.DialogV2,
@@ -221,8 +221,8 @@ function registerSettings() {
   });
 
   game.settings.register(`${MODULE_ID}`, "bookOpenSound", {
-    name: game.i18n.localize("StoryTeller2.Settings.BookOpenSound"),
-    hint: game.i18n.localize("StoryTeller2.Settings.BookOpenSoundHint"),
+    name: game.i18n.localize("StoryTellerX.Settings.BookOpenSound"),
+    hint: game.i18n.localize("StoryTellerX.Settings.BookOpenSoundHint"),
     scope: "client",
     type: Boolean,
     default: true,
@@ -230,8 +230,8 @@ function registerSettings() {
   });
 
   game.settings.register(`${MODULE_ID}`, "pageTurnSound", {
-    name: game.i18n.localize("StoryTeller2.Settings.PageTurnSound"),
-    hint: game.i18n.localize("StoryTeller2.Settings.PageTurnSoundHint"),
+    name: game.i18n.localize("StoryTellerX.Settings.PageTurnSound"),
+    hint: game.i18n.localize("StoryTellerX.Settings.PageTurnSoundHint"),
     scope: "client",
     type: Boolean,
     default: true,
@@ -241,8 +241,8 @@ function registerSettings() {
 
 
   game.settings.register(`${MODULE_ID}`, "imageFilter", {
-    name: game.i18n.localize("StoryTeller2.Settings.ImageFilter"),
-    hint: game.i18n.localize("StoryTeller2.Settings.ImageFilterHint"),
+    name: game.i18n.localize("StoryTellerX.Settings.ImageFilter"),
+    hint: game.i18n.localize("StoryTellerX.Settings.ImageFilterHint"),
     scope: "client",
     config: true,
     type: String,
@@ -257,8 +257,8 @@ function registerSettings() {
   });
 
   game.settings.register(`${MODULE_ID}`, "pageNumbersDefault", {
-    name: game.i18n.localize("StoryTeller2.Settings.PageNumbersDefault"),
-    hint: game.i18n.localize("StoryTeller2.Settings.PageNumbersDefaultHint"),
+    name: game.i18n.localize("StoryTellerX.Settings.PageNumbersDefault"),
+    hint: game.i18n.localize("StoryTellerX.Settings.PageNumbersDefaultHint"),
     scope: "world",
     type: Boolean,
     default: false,
@@ -281,8 +281,8 @@ function registerSettings() {
   });
 
   game.settings.register(`${MODULE_ID}`, "pdfSheet", {
-    name: game.i18n.localize("StoryTeller2.Settings.PdfSheet"),
-    hint: game.i18n.localize("StoryTeller2.Settings.PdfSheetHint"),
+    name: game.i18n.localize("StoryTellerX.Settings.PdfSheet"),
+    hint: game.i18n.localize("StoryTellerX.Settings.PdfSheetHint"),
     scope: "client",
     config: true,
     type: String,

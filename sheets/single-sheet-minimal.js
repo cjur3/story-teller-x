@@ -208,7 +208,7 @@ export class SingleSheetMinimal extends JournalSheet {
 
     if (game.user.isGM) {
       buttons.unshift({
-        label: "STORYTELLER.CopyID",
+        label: "StoryTellerX.CopyID",
         class: "switch-copyid",
         icon: "fas fa-crosshairs",
         onclick: (ev) => this._onCopyID(ev),
@@ -244,7 +244,7 @@ export class SingleSheetMinimal extends JournalSheet {
     document.body.removeChild(aux);
 
     ui.notifications.info(
-      game.i18n.format("STORYTELLER.CopyIDMessage", {
+      game.i18n.format("StoryTellerX.CopyIDMessage", {
         mode: "text",
         title: "Info",
         which: "authorized",

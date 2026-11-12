@@ -3,7 +3,7 @@ import { MODULE_ID, SHEET_TYPES } from "../main.mjs";
 export function registerHotkeys() {
   console.log("Story Teller 2 Journal | Registering Hotkeys");
   game.keybindings.register(MODULE_ID, "journalPageLeft", {
-    name: `${MODULE_ID}.hotkeys.journalPageLeft.name`,
+    name: "StoryTellerX.Hotkeys.PreviousPage",
     editable: [{ key: "ArrowLeft" }],
     restricted: false,
     onDown: () => {},
@@ -13,13 +13,13 @@ export function registerHotkeys() {
         SHEET_TYPES &&
         SHEET_TYPES.includes(ui.activeWindow.constructor.name)
       ) {
-        ui.activeWindow.Pager.flipPrev();
+        ui.activeWindow.Pager?.flipPrev();
       }
     },
   });
 
   game.keybindings.register(MODULE_ID, "journalPageRight", {
-    name: `${MODULE_ID}.hotkeys.journalPageRight.name`,
+    name: "StoryTellerX.Hotkeys.NextPage",
     editable: [{ key: "ArrowRight" }],
     restricted: false,
     onDown: () => {},
@@ -29,7 +29,7 @@ export function registerHotkeys() {
         SHEET_TYPES &&
         SHEET_TYPES.includes(ui.activeWindow.constructor.name)
       ) {
-        ui.activeWindow.Pager.flipNext();
+        ui.activeWindow.Pager?.flipNext();
       }
     },
   });

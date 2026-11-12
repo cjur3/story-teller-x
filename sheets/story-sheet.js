@@ -90,7 +90,7 @@ export class StorySheet extends JournalSheet {
 
     if (game.user.isGM) {
       buttons.unshift({
-        label: "StoryTeller2.CopyID",
+        label: "StoryTellerX.CopyID",
         class: "switch-copyid",
         icon: "fas fa-crosshairs",
         onclick: (ev) => this._onCopyID(ev),
@@ -99,7 +99,7 @@ export class StorySheet extends JournalSheet {
 
     if (game.user.isGM) {
       buttons.unshift({
-        label: "STORYTELLER.BookOptions",
+        label: "StoryTellerX.BookOptions",
         class: "switch-book-options",
         icon: "fas fa-sliders",
         onclick: () => this.openBookOptions(),
@@ -115,15 +115,15 @@ export class StorySheet extends JournalSheet {
     const t = (key) => game.i18n.localize(key);
     const toggles = BOOK_TOGGLE_KEYS.map(
       (key) => `<div class="form-group">
-        <label>${t(`STORYTELLER.Option.${key}`)}</label>
+        <label>${t(`StoryTellerX.Option.${key}`)}</label>
         <div class="form-fields"><input type="checkbox" name="${key}" ${current[key] ? "checked" : ""}></div>
-        <p class="hint">${t(`STORYTELLER.Option.${key}Hint`)}</p>
+        <p class="hint">${t(`StoryTellerX.Option.${key}Hint`)}</p>
       </div>`
     ).join("");
     const font = `<div class="form-group">
-        <label>${t("STORYTELLER.Option.fontFamily")}</label>
+        <label>${t("StoryTellerX.Option.fontFamily")}</label>
         <div class="form-fields">${fontSelectHtml(current.fontFamily)}</div>
-        <p class="hint">${t("STORYTELLER.Option.fontFamilyHint")}</p>
+        <p class="hint">${t("StoryTellerX.Option.fontFamilyHint")}</p>
       </div>`;
     const group = (labelKey, control, hintKey) => `<div class="form-group">
         <label>${t(labelKey)}</label>
@@ -131,22 +131,22 @@ export class StorySheet extends JournalSheet {
         ${hintKey ? `<p class="hint">${t(hintKey)}</p>` : ""}
       </div>`;
     const skin =
-      group("STORYTELLER.Option.coverColor", skinSelectHtml("cover", "coverColor", current.coverColor)) +
-      group("STORYTELLER.Option.pageColor", skinSelectHtml("page", "pageColor", current.pageColor)) +
+      group("StoryTellerX.Option.coverColor", skinSelectHtml("cover", "coverColor", current.coverColor)) +
+      group("StoryTellerX.Option.pageColor", skinSelectHtml("page", "pageColor", current.pageColor)) +
       group(
-        "STORYTELLER.Option.fontColor",
+        "StoryTellerX.Option.fontColor",
         `<input type="color" name="fontColor" value="${current.fontColor || defaultFontColor(current.pageColor)}">
-         <label class="checkbox"><input type="checkbox" name="fontColorDefault" ${current.fontColor ? "" : "checked"}> ${t("STORYTELLER.Option.fontColorDefault")}</label>`,
-        "STORYTELLER.Option.fontColorHint"
+         <label class="checkbox"><input type="checkbox" name="fontColorDefault" ${current.fontColor ? "" : "checked"}> ${t("StoryTellerX.Option.fontColorDefault")}</label>`,
+        "StoryTellerX.Option.fontColorHint"
       );
     const content = skin + toggles + font;
 
     const values = await promptDialog({
-      title: t("STORYTELLER.BookOptionsTitle"),
+      title: t("StoryTellerX.BookOptionsTitle"),
       icon: "fas fa-sliders",
       width: 500,
       content,
-      okLabel: t("STORYTELLER.BookOptionsSave"),
+      okLabel: t("StoryTellerX.BookOptionsSave"),
       okIcon: "fas fa-save",
       callback: (root) => {
         const form = root.querySelector("form");
@@ -182,7 +182,7 @@ export class StorySheet extends JournalSheet {
     document.body.removeChild(aux);
 
     ui.notifications.info(
-      game.i18n.format("STORYTELLER2.CopyIDMessage", {
+      game.i18n.format("StoryTellerX.CopyIDMessage", {
         mode: "text",
         title: "Info",
         which: "authorized",
@@ -193,6 +193,13 @@ export class StorySheet extends JournalSheet {
   /** @inheritdoc */
   async _render(force, options = {}) {
     const renderStart = Date.now();
+    this._renderCount = (this._renderCount ?? 0) + 1;
+    this._lastRenderAt = Date.now();
+    // Every render rebuilds the whole book, whatever changed: settle where the reader is,
+    // stop the old work, and show the loading screen again.
+    this.stopBook();
+    this.element?.[0]?.classList.add("storyteller2-loading");
+    if (this._shownBefore) this._silentRender = true; // only the first opening has a sound
     this.sound();
     await super._render(force, options);
     console.log("Story Teller 2 | Rendering Story Sheet");
@@ -239,7 +246,7 @@ export class StorySheet extends JournalSheet {
       if (!article.querySelector('.back-to-toc')) {
         let backBtn = document.createElement('a');
         backBtn.className = 'back-to-toc';
-        backBtn.title = game.i18n.localize("STORYTELLER.BackToTOC");
+        backBtn.title = game.i18n.localize("StoryTellerX.BackToTOC");
         backBtn.innerHTML = '<i class="fas fa-book-open"></i>';
         article.appendChild(backBtn);
       }
@@ -331,10 +338,43 @@ export class StorySheet extends JournalSheet {
 
     // Failsafe: Ensure loading mask is removed after initial render
     const elapsed = Date.now() - renderStart;
-    const remaining = Math.max(150, 2000 - elapsed);
+    // the first opening shows the loading screen a little longer, a reload only as long as needed
+    const remaining = Math.max(150, (this._shownBefore ? 300 : 2000) - elapsed);
+    this._shownBefore = true;
     setTimeout(() => {
         this.element[0].classList.remove("storyteller2-loading");
     }, remaining);
+  }
+
+  /** Remember the page the reader is on and tear down the page-flip and any splitting under way. */
+  stopBook() {
+    const id = this.object.id;
+    const index = this.Pager?.pages?.currentPageIndex;
+    if (index != null) {
+      setPage(id, index);
+      this.saveBookmark(id, index);
+    }
+    this._splitAbort?.abort();
+    try {
+      this.Pager?.destroy();
+    } catch (error) {
+      console.warn("Story Teller X | could not tear down the page-flip", error);
+    }
+    this.Pager = null;
+  }
+
+  /**
+   * Rebuild the book unless a render has started since `renderCount` was noted. Foundry
+   * re-renders a sheet itself when its journal changes; this makes sure it happens even
+   * when it does not.
+   */
+  reloadUnlessRendered(renderCount) {
+    clearTimeout(this._reloadTimer);
+    this._reloadTimer = setTimeout(() => {
+      // a render that started just before the change already shows it
+      const justRendered = Date.now() - (this._lastRenderAt ?? 0) < 400;
+      if ((this._renderCount ?? 0) === renderCount && !justRendered) this.render(true);
+    }, 250);
   }
 
   /** Move the progress bar of the loading screen (0..1). */
@@ -488,7 +528,7 @@ export class StorySheet extends JournalSheet {
    */
   addChapterButtons() {
     const root = this.element[0];
-    const label = game.i18n.localize("STORYTELLER.Chapter.button");
+    const label = game.i18n.localize("StoryTellerX.Chapter.button");
     for (const article of root.querySelectorAll(".pages article.journal-entry-page[data-page-id]")) {
       if (article.querySelector(":scope > .st-chapter-config")) continue;
       if (!canConfigureChapter(this.object.pages.get(article.dataset.pageId))) continue;
@@ -653,11 +693,8 @@ export class StorySheet extends JournalSheet {
   /** @inheritdoc */
   async close(options = {}) {
     let el = this.element;
-    let pageNumberToSave = this.Pager.pages?.currentPageIndex ?? 0;
-    setPage(this.getData().data._id, pageNumberToSave);
-    this.saveBookmark(this.getData().data._id, pageNumberToSave);
-    this._splitAbort?.abort();
-    this.Pager.destroy();
+    clearTimeout(this._reloadTimer);
+    this.stopBook();
     super.close(options);
     return new Promise((resolve) => {
       el.fadeOut(200, () => {
@@ -755,3 +792,23 @@ function getPage(id) {
 
   return pages[id];
 }
+
+/* Any change to a book (its layout, a chapter, a chapter's settings, the world default for
+   page numbers) rebuilds the whole book for everyone who has it open. */
+function reloadOpenBooks(entryId) {
+  if (!entryId) return;
+  for (const app of Object.values(ui.windows ?? {})) {
+    if (app instanceof StorySheet && app.object?.id === entryId) app.reloadUnlessRendered(app._renderCount ?? 0);
+  }
+}
+
+Hooks.on("updateJournalEntry", (entry) => reloadOpenBooks(entry.id));
+for (const hook of ["updateJournalEntryPage", "createJournalEntryPage", "deleteJournalEntryPage"]) {
+  Hooks.on(hook, (page) => reloadOpenBooks(page.parent?.id));
+}
+Hooks.on("updateSetting", (setting) => {
+  if (setting.key !== `${MODULE_ID}.pageNumbersDefault`) return;
+  for (const app of Object.values(ui.windows ?? {})) {
+    if (app instanceof StorySheet) app.reloadUnlessRendered(app._renderCount ?? 0);
+  }
+});

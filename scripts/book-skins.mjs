@@ -21,7 +21,7 @@ export function defaultFontColor(pageColor) {
 }
 
 const label = (group, value) => {
-  const key = `STORYTELLER.Skin.${group}.${value}`;
+  const key = `StoryTellerX.Skin.${group}.${value}`;
   return game.i18n.has?.(key) ? game.i18n.localize(key) : value;
 };
 

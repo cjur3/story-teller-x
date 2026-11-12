@@ -1,5 +1,5 @@
 <form class="storyteller-importer" autocomplete="off" onsubmit="event.preventDefault();">
-    <p class="notes">{{localize "STORYTELLER.ImporterHint"}}</p>
+    <p class="notes">{{localize "StoryTellerX.ImporterHint"}}</p>
     <div class="form-group">
         <label>Upload File (.txt, .epub)</label>
         <div class="form-fields">
@@ -7,41 +7,41 @@
         </div>
     </div>
     <div class="form-group">
-        <label>{{localize "STORYTELLER.ImporterImages"}}</label>
+        <label>{{localize "StoryTellerX.ImporterImages"}}</label>
         <div class="form-fields">
             <input type="checkbox" name="images" checked />
         </div>
-        <p class="hint">{{localize "STORYTELLER.ImporterImagesHint"}}</p>
+        <p class="hint">{{localize "StoryTellerX.ImporterImagesHint"}}</p>
     </div>
     <div class="form-group">
-        <label>{{localize "STORYTELLER.Option.fontFamily"}}</label>
+        <label>{{localize "StoryTellerX.Option.fontFamily"}}</label>
         <div class="form-fields">{{{fontSelect}}}</div>
-        <p class="hint">{{localize "STORYTELLER.Option.fontFamilyHint"}}</p>
+        <p class="hint">{{localize "StoryTellerX.Option.fontFamilyHint"}}</p>
     </div>
     <div class="form-group">
-        <label>{{localize "STORYTELLER.Importer.sheetType"}}</label>
+        <label>{{localize "StoryTellerX.Importer.sheetType"}}</label>
         <div class="form-fields">
             <select name="sheetType">
-                <option value="story" selected>{{localize "STORYTELLER.StoryEntry"}}</option>
-                <option value="default">{{localize "STORYTELLER.Importer.sheetDefault"}}</option>
+                <option value="story" selected>{{localize "StoryTellerX.StoryEntry"}}</option>
+                <option value="default">{{localize "StoryTellerX.Importer.sheetDefault"}}</option>
             </select>
         </div>
-        <p class="hint">{{localize "STORYTELLER.Importer.sheetTypeHint"}}</p>
+        <p class="hint">{{localize "StoryTellerX.Importer.sheetTypeHint"}}</p>
     </div>
     <div class="form-group st-story-only">
-        <label>{{localize "STORYTELLER.Option.coverColor"}}</label>
+        <label>{{localize "StoryTellerX.Option.coverColor"}}</label>
         <div class="form-fields">{{{coverSelect}}}</div>
     </div>
     <div class="form-group st-story-only">
-        <label>{{localize "STORYTELLER.Option.pageColor"}}</label>
+        <label>{{localize "StoryTellerX.Option.pageColor"}}</label>
         <div class="form-fields">{{{pageSelect}}}</div>
-        <p class="hint">{{localize "STORYTELLER.Importer.pageColorHint"}}</p>
+        <p class="hint">{{localize "StoryTellerX.Importer.pageColorHint"}}</p>
     </div>
     <div class="form-group">
-        <label>{{localize "STORYTELLER.Option.fontColor"}}</label>
+        <label>{{localize "StoryTellerX.Option.fontColor"}}</label>
         <div class="form-fields">
             <input type="color" name="fontColor" value="{{fontColor}}">
-            <label class="checkbox"><input type="checkbox" name="fontColorDefault" checked> {{localize "STORYTELLER.Importer.fontColorDefault"}}</label>
+            <label class="checkbox"><input type="checkbox" name="fontColorDefault" checked> {{localize "StoryTellerX.Importer.fontColorDefault"}}</label>
         </div>
     </div>
 </form>

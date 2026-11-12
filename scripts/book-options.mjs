@@ -89,7 +89,7 @@ export function fontChoices() {
 
 /** <select> markup for the font option. */
 export function fontSelectHtml(current = "", name = "fontFamily") {
-  const options = [`<option value="">${game.i18n.localize("STORYTELLER.Option.fontDefault")}</option>`];
+  const options = [`<option value="">${game.i18n.localize("StoryTellerX.Option.fontDefault")}</option>`];
   for (const font of fontChoices()) {
     const safe = escapeHtml(font);
     options.push(`<option value="${safe}" style="font-family:'${safe}'" ${font === current ? "selected" : ""}>${safe}</option>`);
