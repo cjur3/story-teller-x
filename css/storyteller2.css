@@ -1,0 +1,690 @@
+@import url("https://fonts.googleapis.com/css2?family=Kurale&display=swap");
+@import "compability.css";
+@import "book-skins.css";
+@import "themes/newspaper.css";
+@import "themes/fullscreen.css";
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page {
+  background-image: linear-gradient(135deg,#efe2c3,#e3d1a6);
+  background-size: 100% 100%;
+  border: none;
+  font-family: "Kurale", serif;
+  font-weight: 600;
+  opacity: 0.9;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+}
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .title {
+  font-family: "Kurale", serif;
+  font-weight: 600;
+  opacity: 0.9;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+}
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-header {
+  font-family: "Kurale", serif;
+  font-weight: 900;
+  color: white;
+}
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page aside.page-level {
+  display: none;
+}
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-header {
+  background: none;
+}
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-content {
+  background: none;
+}
+
+.app.window-app.sheet.story-sheet+.journal-sheet.journal-entry-page .window-header {
+  background: #3b2a1e;
+  /*background-size: 100% 100%;*/
+  border: none;
+}
+
+.app.story-sheet {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  background: black;
+}
+
+.pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  background: black;
+}
+
+.pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav {
+  background: black;
+  z-index: 10;
+  -webkit-mask-image: url("../img/nav/arrow_in_circle_right_mask.webp");
+  -webkit-mask-size: var(--st-nav-px) var(--st-nav-px);
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url("../img/nav/arrow_in_circle_right_mask.webp");
+  mask-size: var(--st-nav-px);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  opacity: 0.3;
+  height: var(--st-nav-px);
+  width: var(--st-nav-px);
+  border-style: none;
+  margin-top: auto;
+  margin-bottom: 0px;
+  margin-right: 0px;
+  margin-left: auto;
+  right: calc(var(--st-nav-x) * var(--st-w));
+  bottom: calc(var(--st-nav-y) * var(--st-h));
+}
+
+.pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav {
+  background: black;
+  -webkit-mask-image: url("../img/nav/arrow_in_circle_left_mask.webp");
+  -webkit-mask-size: var(--st-nav-px) var(--st-nav-px);
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url("../img/nav/arrow_in_circle_left_mask.webp");
+  mask-size: var(--st-nav-px);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  opacity: 0.3;
+  height: var(--st-nav-px);
+  width: var(--st-nav-px);
+  border-style: none;
+  margin-top: auto;
+  margin-bottom: 0px;
+  margin-right: auto;
+  margin-left: 0px;
+  left: calc(var(--st-nav-x) * var(--st-w));
+  bottom: calc(var(--st-nav-y) * var(--st-h));
+}
+
+.app.story-sheet .journal-entry-page.pages-content .content-inner {
+  padding: 6%;
+  /* keep the "Add Chapter" button 10px above the page turn arrows */
+  padding-bottom: max(6%, calc((var(--st-nav-y) + var(--st-nav-size)) * var(--st-h) + 10px));
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Styling for the tabs */
+nav.storyteller-nav.tabs {
+  flex: 0;
+}
+
+#story .document {
+  line-height: 32px;
+}
+
+.window-app.story-sheet {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.window-app.story-sheet .window-header {
+  border: none;
+  padding: 0 calc(var(--st-header-side) * var(--st-w));
+  margin-top: calc(var(--st-header-top) * var(--st-h));
+}
+
+.window-app.story-sheet .window-content {
+  background: none;
+  overflow: initial;
+  margin: calc(var(--st-leaves-top) * var(--st-h)) calc(var(--st-leaves-right) * var(--st-w)) calc(var(--st-leaves-bottom) * var(--st-h)) calc(var(--st-leaves-left) * var(--st-w));
+  padding: 0 0.34% 0.34% 0.34%;
+  /* hack */
+  height: 0;
+}
+
+.window-app.story-sheet .journal-sheet-container,
+.window-app.story-sheet form {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.window-app.story-sheet.storyteller2-loading .journal-sheet-container,
+.window-app.story-sheet.storyteller2-loading form {
+  opacity: 0 !important;
+}
+
+.window-app.story-sheet .storyteller-loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.window-app.story-sheet .storyteller-loading-screen h1 {
+  font-family: "Kurale", serif;
+  font-size: 5vh;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  background: rgba(255, 250, 240, 0.6);
+  padding: 10px 40px;
+  border-radius: 4px;
+  border: 1px solid rgba(72, 57, 46, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.window-app.story-sheet.storyteller2-loading .storyteller-loading-screen {
+  opacity: 1;
+}
+
+.story-sheet:before {
+  position: absolute;
+  content: " ";
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.story-sheet-background {
+  content: " ";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000ba;
+}
+
+.story-sheet .pages {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  top: -2px;
+}
+
+.window-app.story-sheet .window-header .window-title {
+  opacity: 0;
+}
+
+.page.left>.page-inner ::-webkit-scrollbar-thumb {
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: #74645526;
+}
+
+.page.left>.page-inner ::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.story-sheet .page::-webkit-scrollbar-thumb {
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: #74645526;
+}
+
+.story-sheet .page::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.story-sheet .page-num .journal-page-header h1 {
+  font-family: "Kurale", serif;
+  font-weight: 600;
+  opacity: 0.9;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+}
+
+/* Titles: sized from the page text (1.5vh) instead of the big UI heading sizes */
+.story-sheet .page-num .journal-page-header :is(h1, h2, h3, h4, h5, h6) {
+  font-size: 2.4vh;
+  line-height: 1.25;
+  margin: 0 0 0.6em;
+}
+
+.story-sheet .page-num .journal-page-content h1 {
+  font-size: 2.1vh;
+}
+
+.story-sheet .page-num .journal-page-content h2 {
+  font-size: 1.9vh;
+}
+
+.story-sheet .page-num .journal-page-content :is(h3, h4, h5, h6) {
+  font-size: 1.7vh;
+}
+
+.story-sheet .journal-page-content,
+.story-sheet .page-num.num-start h1,
+.story-sheet .page-num.num-start .pages-list>ol {
+  font-family: "Kurale", serif;
+  font-size: 1.4vh;
+  font-weight: 600;
+  opacity: 0.9;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  height: 85%;
+}
+
+.story-sheet .page-num.num-start {
+  position: relative;
+}
+
+.story-sheet .journal-page-content {
+  font-family: "Kurale", serif;
+  /*    font-size: 1.4vh;*/
+  font-size: 1.5vh;
+  font-weight: 600;
+  opacity: 0.9;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  height: 85%;
+  overflow-y: scroll;
+  padding: 6% 6% 6% 6%;
+  box-sizing: border-box;
+}
+
+.story-sheet .journal-page-content img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.story-sheet .page-num.num-start .pages-list>ol>li .page-title {
+  cursor: pointer;
+}
+
+.story-sheet .page-num.num-start .pages-list>ol>li:hover .page-title {
+  text-shadow: 0 0 8px var(--color-shadow-primary);
+}
+
+.story-sheet .page-num.num-start .pages-list>ol {
+  font-size: 1.5vh;
+  line-height: 1.35;
+  text-align: left;
+  height: auto;
+  /* Foundry's "scrollable" class would make the list a scroll box of its own;
+     the page (and the table of contents pagination) must see the real height */
+  overflow: visible;
+}
+
+.story-sheet .page-num.num-start .pages-list>ol>li {
+  margin: 0.2em 0;
+}
+
+.story-sheet .back-to-toc {
+  display: block;
+  position: absolute;
+  top: calc(var(--st-toc-top) * var(--st-h));
+  left: calc(var(--st-toc-side) * var(--st-w));
+  font-size: 1.5em;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  cursor: pointer;
+  z-index: 100;
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.story-sheet .back-to-toc:hover {
+  opacity: 1.0;
+}
+
+.page-num.odd .back-to-toc {
+  left: auto;
+  right: calc(var(--st-toc-side) * var(--st-w));
+}
+
+/* Foundry lists the headings of a page below its entry when the page is "active";
+   a book's table of contents has its own, optional heading entries instead */
+.story-sheet .page-num.num-start .pages-list .headings {
+  display: none !important;
+}
+
+/* The table of contents page is a column: title, the list takes all the room that
+   is left, the "Add Chapter" button sits at the bottom. */
+.story-sheet .page-num.num-start .pages-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow-y: auto;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+
+.story-sheet .page-num.num-start .journal-entry-page.pages-content {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+
+.app.story-sheet .page-num.num-start .journal-entry-page.pages-content .content-inner {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.story-sheet .page-num.num-start .journal-header {
+  flex: 0 0 auto;
+}
+
+.story-sheet .page-num.num-start input {
+  font-family: "Kurale", serif;
+  opacity: 0.9;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  text-align: center;
+  height: 2em;
+  font-weight: 600;
+  font-size: 1.6em;
+}
+
+.story-sheet .page-num.num-start .create {
+  flex: 0 0 auto;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-border-light-tertiary);
+}
+
+.story-sheet.scrollable .page-num.num-start,
+.story-sheet.scrollable .page-num.page {
+  overflow-y: scroll;
+}
+
+.story-sheet .journal-entry-page.num-start.editor-edit {
+  padding: calc(var(--st-pad-top) * var(--st-h)) calc(var(--st-pad-right) * var(--st-w)) calc(var(--st-pad-bottom) * var(--st-h)) calc(var(--st-pad-left) * var(--st-w));
+}
+
+.story-sheet .journal-entry-page.text {
+  padding: calc(var(--st-pad-top) * var(--st-h)) calc(var(--st-pad-right) * var(--st-w)) calc(var(--st-pad-bottom) * var(--st-h)) calc(var(--st-pad-left) * var(--st-w));
+  height: 100%;
+}
+
+.story-sheet .journal-entry-page.image {
+  padding: calc(var(--st-pad-top) * var(--st-h)) calc(var(--st-pad-right) * var(--st-w)) calc(var(--st-pad-bottom) * var(--st-h)) calc(var(--st-pad-left) * var(--st-w));
+  height: 100%;
+}
+
+.story-sheet .journal-entry-page.video {
+  padding: calc(var(--st-pad-top) * var(--st-h)) calc(var(--st-pad-right) * var(--st-w)) calc(var(--st-pad-bottom) * var(--st-h)) calc(var(--st-pad-left) * var(--st-w));
+  height: 100%;
+}
+
+.story-sheet .journal-entry-page.pdf {
+  padding: calc(var(--st-pad-top) * var(--st-h)) calc(var(--st-pad-right) * var(--st-w)) calc(var(--st-pad-bottom) * var(--st-h)) calc(var(--st-pad-left) * var(--st-w));
+  height: 100%;
+}
+
+.story-sheet .journal-entry-page.image,
+.story-sheet .journal-entry-page.image figure {
+  height: 100%;
+  margin: 0;
+}
+
+.page-num.--right .journal-page-arrow-left.prev {
+  display: none;
+}
+
+.page-num.--left .journal-page-arrow-right.next {
+  display: none;
+}
+
+.story-sheet .editor-edit {
+  display: block;
+  top: 1.3%;
+  right: 2%;
+}
+
+div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content {
+  border-color: blue;
+  border-width: 1px;
+  border-style: solid;
+  background: transparent !important;
+}
+
+div.app.sheet.story-sheet.journal-sheet.journal-entry section.window-content div.journal-sheet-container section.journal-entry-content {
+  background: transparent !important;
+}
+
+.page-num.odd .editor-edit {
+  left: 2%;
+  right: auto;
+}
+
+.story-sheet .journal-sheet-container,
+.story-sheet .journal-entry-pages {
+  width: 100%;
+  height: 100%;
+}
+
+.story-sheet .story-settings {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+
+.story-sheet .window-app.sheet.journal-sheet.journal-entry-page {
+  background-image: linear-gradient(135deg,#efe2c3,#e3d1a6);
+  background-size: 100% 100%;
+  border: none;
+}
+
+.story-sheet .window-app.sheet.journal-sheet.journal-entry-page .window-header {
+  background: none;
+}
+
+.story-sheet .window-app.sheet.journal-sheet.journal-entry-page .window-content {
+  background: none;
+}
+
+.story-sheet .window-app.sheet.journal-sheet.journal-entry-page .window-header {
+  background: #3b2a1e;
+  /*background-size: 100% 100%;*/
+  border: none;
+}
+
+.story-sheet.hide-toc-numbers .page-num.num-start .pages-list > ol {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* ======================================================== */
+/* PAGE NUMBERS (per book, see scripts/book-options.mjs) */
+.story-sheet .page-num .st-folio {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--st-folio-y) * var(--st-h));
+  text-align: center;
+  font-family: "Kurale", serif;
+  font-size: 1.4vh;
+  font-weight: 600;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.story-sheet.st-page-numbers .page-num .st-folio {
+  display: block;
+}
+
+/* ======================================================== */
+/* EDIT PAGE: feather icon next to the page title */
+.story-sheet .st-edit-page {
+  display: inline-block;
+  margin-inline-start: 0.5em;
+  font-size: 0.55em;
+  vertical-align: middle;
+  color: inherit;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.story-sheet .st-edit-page:hover {
+  opacity: 1;
+}
+
+/* pages without a visible title */
+.story-sheet .st-edit-page.st-edit-page-corner {
+  position: absolute;
+  top: 1.3%;
+  right: 2%;
+  margin: 0;
+  font-size: 1.1em;
+  z-index: 100;
+}
+
+/* ======================================================== */
+/* AUTO SPLIT (per book): text is cut into pages, so nothing scrolls */
+.story-sheet.st-auto-split .page-num .journal-entry-page.text {
+  overflow: hidden;
+}
+
+.story-sheet.st-auto-split .page-num .journal-entry-page.text .journal-page-content {
+  height: auto;
+  overflow: visible;
+  display: flow-root;
+}
+
+/* a list item that continues from the previous page has no new bullet */
+.story-sheet.st-auto-split li.st-continued {
+  list-style: none;
+}
+
+/* The TOC lists chapters; the number is the leaf the chapter starts on. */
+.story-sheet.st-auto-split .page-num.num-start .pages-list > ol {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.story-sheet .page-num.num-start .st-toc-page {
+  display: none;
+}
+
+.story-sheet.st-auto-split.st-page-numbers:not(.hide-toc-numbers) .page-num.num-start .st-toc-page {
+  display: inline;
+  margin-inline-start: 0.6em;
+  opacity: 0.7;
+}
+
+/* Table of contents row like in a printed book: title ........ page */
+.story-sheet.st-auto-split.st-page-numbers:not(.hide-toc-numbers) .page-num.num-start :is(.page-heading, .st-toc-heading-row) {
+  display: flex;
+  align-items: baseline;
+}
+
+.story-sheet.st-auto-split.st-page-numbers:not(.hide-toc-numbers) .page-num.num-start :is(.page-title, .st-toc-heading-text) {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.story-sheet.st-auto-split.st-page-numbers:not(.hide-toc-numbers) .page-num.num-start :is(.page-title, .st-toc-heading-text)::after {
+  content: "";
+  flex: 1;
+  min-width: 1em;
+  margin: 0 0.4em;
+  border-bottom: 1px dotted currentColor;
+  opacity: 0.4;
+  transform: translateY(-0.3em);
+}
+
+.story-sheet.st-auto-split.st-page-numbers:not(.hide-toc-numbers) .page-num.num-start .st-toc-page {
+  margin-inline-start: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Headings listed below their chapter in the table of contents */
+.story-sheet .page-num.num-start .st-toc-headings {
+  list-style: none;
+  margin: 0.1em 0 0.4em;
+  padding: 0;
+  font-size: 0.9em;
+  opacity: 0.85;
+}
+
+.story-sheet .page-num.num-start .st-toc-heading {
+  cursor: pointer;
+}
+
+.story-sheet .page-num.num-start .st-toc-heading:hover .st-toc-heading-text {
+  text-shadow: 0 0 8px var(--color-shadow-primary);
+}
+
+.story-sheet .page-num.num-start .st-toc-heading[data-depth="1"] .st-toc-heading-row {
+  padding-inline-start: 1em;
+}
+
+.story-sheet .page-num.num-start .st-toc-heading[data-depth="2"] .st-toc-heading-row {
+  padding-inline-start: 2em;
+}
+
+/* a blank page added so that a chapter starts on a right-hand page */
+.story-sheet .page-num.st-filler {
+  pointer-events: none;
+}
+
+.story-sheet .page-num.st-filler .storyteller2-page-entry-nav {
+  pointer-events: auto;
+}
+
+/* ======================================================== */
+/* FILTERS */
+/* ======================================================== */
+.filter-sepia .journal-page-content img,
+.filter-sepia .journal-entry-page.image figure img {
+  filter: contrast(0.5) sepia(1) contrast(2);
+  mix-blend-mode: multiply;
+}
+.filter-grayscale .journal-page-content img,
+.filter-grayscale .journal-entry-page.image figure img {
+  filter: grayscale(1) contrast(1.2);
+  mix-blend-mode: multiply;
+}
+.filter-invert .journal-page-content img,
+.filter-invert .journal-entry-page.image figure img {
+  filter: invert(0.9) hue-rotate(180deg);
+  mix-blend-mode: screen;
+}
+
+
+
+/* Book font chosen by the GM (book option fontFamily) */
+.story-sheet.st-custom-font .journal-page-content,
+.story-sheet.st-custom-font .journal-page-content *,
+.story-sheet.st-custom-font .page-num h1,
+.story-sheet.st-custom-font .page-num.num-start .pages-list>ol,
+.story-sheet.st-custom-font .page-num.num-start input {
+  font-family: var(--st-book-font), serif;
+}
+
+/* "Align book" dialog: long, so it scrolls instead of growing past the screen */
+.st-align-dialog {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 0.5em;
+}
+
+.st-align-dialog summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.3em 0;
+}
+
+.st-align-dialog .form-fields output {
+  flex: 0 0 3.5em;
+  text-align: right;
+}

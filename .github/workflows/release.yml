@@ -1,0 +1,68 @@
+name: Release
+
+# Runs when a version tag is pushed, e.g. 2.1.0 or v2.1.0.
+# The release notes come from CHANGELOG.md (see CONTRIBUTING.md).
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+      - "[0-9]+.[0-9]+.[0-9]+*"
+
+env:
+  project_url: "https://github.com/${{ github.repository }}"
+  latest_manifest_url: "https://github.com/${{ github.repository }}/releases/latest/download/module.json"
+  release_module_url: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/module.zip"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Fill in module.json
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          URL: ${{ env.project_url }}
+          MANIFEST: ${{ env.latest_manifest_url }}
+          DOWNLOAD: ${{ env.release_module_url }}
+        run: |
+          sed -i \
+            -e "s|#{VERSION}#|${VERSION}|g" \
+            -e "s|#{URL}#|${URL}|g" \
+            -e "s|#{MANIFEST}#|${MANIFEST}|g" \
+            -e "s|#{DOWNLOAD}#|${DOWNLOAD}|g" module.json
+          if grep -q '#{' module.json; then
+            echo "::error::module.json still contains unreplaced tokens"; cat module.json; exit 1
+          fi
+          jq -e --arg v "$VERSION" '.version == $v' module.json
+
+      - name: Extract release notes from CHANGELOG.md
+        run: node scripts/ci/changelog-section.mjs "${{ steps.version.outputs.version }}" > release-notes.md
+
+      - name: Create module archive
+        run: |
+          zip -r module.zip module.json main.mjs README.md LICENSE CHANGELOG.md \
+            templates scripts css img lang sheets sounds
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ steps.version.outputs.version }}
+          body_path: release-notes.md
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          files: |
+            module.json
+            module.zip
+
+      - name: Publish module to FoundryVTT website
+        uses: cs96and/FoundryVTT-release-package@v1
+        with:
+          package-token: ${{ secrets.FOUNDRY_MODULE_TOKEN }}
+          manifest-url: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/module.json

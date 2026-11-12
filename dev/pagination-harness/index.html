@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pagination harness</title>
+<!--
+  Manual test page for scripts/pagination. ES modules need http, so open it through
+  Foundry's own server:
+  http://localhost:30000/modules/story-teller-x/dev/pagination-harness/index.html
+-->
+<style>
+  body { font: 14px sans-serif; margin: 1rem; }
+  textarea { width: 100%; height: 12rem; font-family: monospace; }
+  .controls { display: flex; gap: 1rem; align-items: center; margin: .5rem 0; flex-wrap: wrap; }
+  #pages { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+  .leaf { position: relative; background: #f4ead0; color: #48392e; font: 16px/1.4 serif;
+          padding: 24px 28px; box-sizing: border-box; overflow: hidden; outline: 1px solid #aaa; }
+  .leaf .st-content { height: 100%; overflow: hidden; }
+  .leaf.overflow { outline: 2px solid red; }
+  .leaf .st-folio { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-size: 13px; }
+  .leaf li.st-continued { list-style: none; }
+  img { max-width: 100%; }
+  #measure-host { position: relative; }
+  #log { font-family: monospace; white-space: pre; }
+</style>
+</head>
+<body>
+<h1>Pagination harness</h1>
+<textarea id="html"></textarea>
+<div class="controls">
+  <label>Leaf width <input id="w" type="number" value="420"></label>
+  <label>Leaf height <input id="h" type="number" value="560"></label>
+  <label><input id="folio" type="checkbox" checked> page numbers</label>
+  <label><input id="float" type="checkbox"> auto-float small images</label>
+  <button id="go">Split</button>
+  <button id="sample">Load sample</button>
+  <span id="log"></span>
+</div>
+<div id="measure-host"></div>
+<div id="pages"></div>
+
+<script type="module">
+import { fitMedia, measureContentArea, paginate, preloadImages } from "../../scripts/pagination/index.mjs";
+
+const $ = (id) => document.getElementById(id);
+const words = (n) => Array.from({ length: n }, (_, i) => "word" + i).join(" ");
+const tallImage = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="3000"><rect width="1000" height="3000" fill="#c9a66b"/><text x="50" y="200" font-size="120">tall image</text></svg>');
+const smallImage = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="260"><rect width="200" height="260" fill="#8a6d3b"/><text x="20" y="130" font-size="28">small</text></svg>');
+const sample = () => `<h1>Chapter</h1><p>${words(300)}</p><h2>Section</h2><ul><li>${words(20)}</li><li>${words(40)}</li></ul><p>${words(200)}</p><ol>${Array.from({length: 15}, (_, i) => `<li>Item ${i} ${words(12)}</li>`).join("")}</ol><p>${words(150)}</p><p><img src="${smallImage}" style="float:left"> Text that wraps around a left-floated image. ${words(120)}</p><p>Text before the image.</p><img src="${tallImage}"><p>${words(80)}</p>`;
+$("sample").onclick = () => ($("html").value = sample());
+$("html").value = sample();
+
+// the harness leaf CSS above plays the role of the theme: measure inside a .leaf
+$("go").onclick = async () => {
+  const leafSize = { width: +$("w").value, height: +$("h").value };
+  const pageNumbers = $("folio").checked;
+  const t0 = performance.now();
+  const area = await measureContentArea({
+    host: $("measure-host"),
+    leafSize,
+    pageNumbers,
+    leafClasses: ["leaf"],
+    articleClasses: [],
+  });
+  // same order as the story sheet: sizes, fit, split
+  const source = $("html").value;
+  const fitted = fitMedia(source, area.imageMax, await preloadImages(source), { autoFloat: $("float").checked });
+  const pages = await paginate(fitted, area);
+  area.dispose();
+  const out = $("pages");
+  out.replaceChildren();
+  pages.forEach((html, i) => {
+    const leaf = document.createElement("div");
+    leaf.className = "leaf";
+    leaf.style.width = leafSize.width + "px";
+    leaf.style.height = leafSize.height + "px";
+    leaf.innerHTML = `<div class="st-content">${html}</div>` + (pageNumbers ? `<div class="st-folio">${i + 1}</div>` : "");
+    out.appendChild(leaf);
+    const c = leaf.querySelector(".st-content");
+    if (c.scrollHeight > c.clientHeight + 1) leaf.classList.add("overflow");
+  });
+  $("log").textContent = `${pages.length} pages, content area ${Math.round(area.width)}x${Math.round(area.height)}, ${Math.round(performance.now() - t0)} ms`;
+};
+</script>
+</body>
+</html>

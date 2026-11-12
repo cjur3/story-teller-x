@@ -1,0 +1,205 @@
+/* Book skins: cover color (st-cover-*) and page color (st-page-color-*).
+   Defaults are brown cover and beige pages. Images: img/book/ (CC0, see its LICENSE.md). */
+.story-sheet {
+  --st-cover-img: url(../img/book/cover-brown.webp);
+  --st-pages-img: url(../img/book/pages-beige.webp);
+  --st-page-left-img: url(../img/book/page-left-beige.webp);
+  --st-page-right-img: url(../img/book/page-right-beige.webp);
+  --st-book-default-color: #48392e;
+
+  /* Alignment, tuned with the "Align book" dialog. Unitless numbers:
+     1 = 1% of the book width (w) or of the book height (h). The unit px values
+     are set by the sheet, so the layout scales with the book (and the artwork). */
+  --st-w: calc(0.01 * 80vh * 1.4835);
+  --st-h: calc(0.01 * 80vh);
+  /* where the pages sit inside the book: top/bottom in h, left/right in w */
+  --st-leaves-top: 0;
+  --st-leaves-right: 4;
+  --st-leaves-bottom: 4.45;
+  --st-leaves-left: 4;
+  /* space between page edge and text: top/bottom in h, inner (spine) / outer (edge) in w */
+  --st-pad-top: 1.99;
+  --st-pad-bottom: 0.5;
+  --st-pad-inner: 4.34;
+  --st-pad-outer: 4.34;
+  /* title bar: distance from the top (h) and from the sides (w) */
+  --st-header-top: 2.22;
+  --st-header-side: 4.3;
+  /* page turn arrows: size (h) and distance from the page corner (x in w, y in h) */
+  --st-nav-size: 3.4;
+  --st-nav-x: 0.72;
+  --st-nav-y: 1.07;
+  --st-nav-px: calc(var(--st-nav-size) * var(--st-h));
+  /* "back to table of contents" icon: distance from top (h) and side (w) */
+  --st-toc-top: 1.3;
+  --st-toc-side: 1.0;
+  /* page number: distance from the bottom (h) */
+  --st-folio-y: 1.2;
+}
+
+/* left pages: outer edge on the left; right pages (odd children) the other way round */
+.story-sheet .page-num {
+  --st-pad-left: var(--st-pad-outer);
+  --st-pad-right: var(--st-pad-inner);
+}
+.story-sheet .page-num:nth-child(2n-1) {
+  --st-pad-left: var(--st-pad-inner);
+  --st-pad-right: var(--st-pad-outer);
+}
+
+.story-sheet.st-cover-brown { --st-cover-img: url(../img/book/cover-brown.webp); }
+.story-sheet.st-cover-brown-seam { --st-cover-img: url(../img/book/cover-brown-seam.webp); }
+.story-sheet.st-cover-black { --st-cover-img: url(../img/book/cover-black.webp); }
+.story-sheet.st-cover-bloodred { --st-cover-img: url(../img/book/cover-bloodred.webp); }
+.story-sheet.st-cover-khaki { --st-cover-img: url(../img/book/cover-khaki.webp); }
+
+.story-sheet.st-page-color-beige {
+  --st-pages-img: url(../img/book/pages-beige.webp);
+  --st-page-left-img: url(../img/book/page-left-beige.webp);
+  --st-page-right-img: url(../img/book/page-right-beige.webp);
+  --st-book-default-color: #48392e;
+}
+.story-sheet.st-page-color-white {
+  --st-pages-img: url(../img/book/pages-white.webp);
+  --st-page-left-img: url(../img/book/page-left-white.webp);
+  --st-page-right-img: url(../img/book/page-right-white.webp);
+  --st-book-default-color: #48392e;
+}
+.story-sheet.st-page-color-black {
+  --st-pages-img: url(../img/book/pages-black.webp);
+  --st-page-left-img: url(../img/book/page-left-black.webp);
+  --st-page-right-img: url(../img/book/page-right-black.webp);
+  --st-book-default-color: #9e0b0f; /* blood red */
+}
+
+/* Cover below, pages on top */
+.story-sheet:before {
+  background:
+    var(--st-pages-img) 0 0 / 100% 100% no-repeat,
+    var(--st-cover-img) 0 0 / 100% 100% no-repeat;
+}
+
+.story-sheet .page-num:nth-child(2n) {
+  background: var(--st-page-left-img);
+  background-size: 100% 100%; /* show the whole page artwork, never crop its edges */
+}
+
+.story-sheet .page-num:nth-child(2n-1) {
+  background: var(--st-page-right-img);
+  background-size: 100% 100%; /* show the whole page artwork, never crop its edges */
+}
+
+/* Tuned with the "Align book" dialog (brown cover). The page artwork decides the
+   geometry, so these apply to every cover with these page colors. */
+.story-sheet.st-page-color-beige,
+.story-sheet.st-page-color-black {
+  --st-leaves-top: -1.05;
+  --st-leaves-bottom: 4.25;
+  --st-leaves-left: 5.45;
+  --st-leaves-right: 5.45;
+  --st-pad-top: 2;
+  --st-pad-bottom: 0.5;
+  --st-pad-inner: 4.35;
+  --st-pad-outer: 4.35;
+  --st-header-top: 4.05;
+  --st-header-side: 4.2;
+  --st-nav-size: 3.4;
+  --st-nav-x: 1.8;
+  --st-nav-y: 1.55;
+  --st-toc-top: 2.2;
+  --st-toc-side: 2.15;
+  --st-folio-y: 1.9;
+}
+
+.story-sheet.st-page-color-white {
+  --st-leaves-top: -0.75;
+  --st-leaves-bottom: 5.6;
+  --st-leaves-left: 6.1;
+  --st-leaves-right: 6.35;
+  --st-pad-top: 2;
+  --st-pad-bottom: 0.5;
+  --st-pad-inner: 4.35;
+  --st-pad-outer: 4.35;
+  --st-header-top: 4.95;
+  --st-header-side: 4.3;
+  --st-nav-size: 3.9;
+  --st-nav-x: 2.15;
+  --st-nav-y: 2.75;
+  --st-toc-top: 2.35;
+  --st-toc-side: 2.25;
+  --st-folio-y: 4.1;
+}
+
+/* Page turning. A turning page swings out over the edge of its own page, so no
+   container may clip it; and nothing may show a scrollbar while it moves (the
+   sheet has .st-flipping from the first move until the page has landed). */
+.window-app.story-sheet,
+.story-sheet .journal-sheet-container,
+.story-sheet .journal-entry-pages,
+.story-sheet form,
+.story-sheet .stf__parent,
+.story-sheet .stf__wrapper,
+.story-sheet .stf__block {
+  overflow: visible;
+}
+
+.story-sheet.st-flipping .page-num,
+.story-sheet.st-flipping .page-num .pages-list,
+.story-sheet.st-flipping .page-num .pages-list > ol,
+.story-sheet.st-flipping .page-num .journal-entry-page {
+  overflow: hidden;
+}
+
+/* Chapter page filter: the page texture lies over the whole page and blends with it.
+   It does not catch clicks, and without text or image under it the page looks the same. */
+.story-sheet .page-num[data-st-filter]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: var(--st-page-right-img) 0 0 / 100% 100% no-repeat;
+  mix-blend-mode: var(--st-filter-blend, normal);
+}
+
+.story-sheet .page-num[data-st-filter]:nth-child(2n)::after {
+  background-image: var(--st-page-left-img);
+}
+
+.story-sheet .page-num[data-st-filter="darken"] { --st-filter-blend: darken; }
+.story-sheet .page-num[data-st-filter="multiply"] { --st-filter-blend: multiply; }
+.story-sheet .page-num[data-st-filter="overlay"] { --st-filter-blend: overlay; }
+.story-sheet .page-num[data-st-filter="soft-light"] { --st-filter-blend: soft-light; }
+.story-sheet .page-num[data-st-filter="hard-light"] { --st-filter-blend: hard-light; }
+.story-sheet .page-num[data-st-filter="color-burn"] { --st-filter-blend: color-burn; }
+.story-sheet .page-num[data-st-filter="luminosity"] { --st-filter-blend: luminosity; }
+
+/* Chapter settings gear: in the table of contents and below the "back to contents" icon */
+.story-sheet .st-chapter-config {
+  display: inline-block;
+  margin-inline-start: 0.5em;
+  font-size: 0.7em;
+  color: inherit;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.story-sheet .st-chapter-config:hover {
+  opacity: 1;
+}
+
+.story-sheet .st-chapter-config-page {
+  position: absolute;
+  z-index: 100;
+  margin: 0;
+  font-size: 1.2em;
+  top: calc(var(--st-toc-top) * var(--st-h) + 2.4em);
+  left: calc(var(--st-toc-side) * var(--st-w));
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+}
+
+.page-num.odd .st-chapter-config-page {
+  left: auto;
+  right: calc(var(--st-toc-side) * var(--st-w));
+}
