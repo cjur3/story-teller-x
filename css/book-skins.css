@@ -37,12 +37,14 @@
   --st-folio-y: 1.2;
 }
 
-/* left pages: outer edge on the left; right pages (odd children) the other way round */
+/* The first leaf is a blank left page, so left pages are the odd children and right pages
+   the even ones (the table of contents is the first right page). Left pages have their
+   outer edge on the left; right pages the other way round. */
 .story-sheet .page-num {
   --st-pad-left: var(--st-pad-outer);
   --st-pad-right: var(--st-pad-inner);
 }
-.story-sheet .page-num:nth-child(2n-1) {
+.story-sheet .page-num:nth-child(2n) {
   --st-pad-left: var(--st-pad-inner);
   --st-pad-right: var(--st-pad-outer);
 }
@@ -69,7 +71,7 @@
   --st-pages-img: url(../img/book/pages-black.webp);
   --st-page-left-img: url(../img/book/page-left-black.webp);
   --st-page-right-img: url(../img/book/page-right-black.webp);
-  --st-book-default-color: #9e0b0f; /* blood red */
+  --st-book-default-color: #d4d4d4; /* bright grey */
 }
 
 /* Cover below, pages on top */
@@ -79,12 +81,12 @@
     var(--st-cover-img) 0 0 / 100% 100% no-repeat;
 }
 
-.story-sheet .page-num:nth-child(2n) {
+.story-sheet .page-num:nth-child(2n-1) {
   background: var(--st-page-left-img);
   background-size: 100% 100%; /* show the whole page artwork, never crop its edges */
 }
 
-.story-sheet .page-num:nth-child(2n-1) {
+.story-sheet .page-num:nth-child(2n) {
   background: var(--st-page-right-img);
   background-size: 100% 100%; /* show the whole page artwork, never crop its edges */
 }
@@ -162,7 +164,7 @@
   mix-blend-mode: var(--st-filter-blend, normal);
 }
 
-.story-sheet .page-num[data-st-filter]:nth-child(2n)::after {
+.story-sheet .page-num[data-st-filter]:nth-child(2n-1)::after {
   background-image: var(--st-page-left-img);
 }
 

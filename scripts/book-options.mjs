@@ -27,7 +27,7 @@ const BOOK_OPTION_DEFAULTS = {
   // Cover and page color of the book (see book-skins.mjs).
   coverColor: DEFAULT_COVER,
   pageColor: DEFAULT_PAGE,
-  // Text color; "" = the default of the page color (blood red on black pages).
+  // Text color; "" = the default of the page color (bright grey on black pages).
   fontColor: "",
 };
 

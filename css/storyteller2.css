@@ -54,17 +54,17 @@
 .pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav:hover {
   opacity: 0.8;
   transition: opacity 0.3s;
-  background: black;
+  background: var(--st-book-color, var(--st-book-default-color, #48392e));
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav:hover {
   opacity: 0.8;
   transition: opacity 0.3s;
-  background: black;
+  background: var(--st-book-color, var(--st-book-default-color, #48392e));
 }
 
 .pages .page-num .journal-page-arrow-right.storyteller2-page-entry-nav {
-  background: black;
+  background: var(--st-book-color, var(--st-book-default-color, #48392e));
   z-index: 10;
   -webkit-mask-image: url("../img/nav/arrow_in_circle_right_mask.webp");
   -webkit-mask-size: var(--st-nav-px) var(--st-nav-px);
@@ -87,7 +87,7 @@
 }
 
 .pages .page-num .journal-page-arrow-left.storyteller2-page-entry-nav {
-  background: black;
+  background: var(--st-book-color, var(--st-book-default-color, #48392e));
   -webkit-mask-image: url("../img/nav/arrow_in_circle_left_mask.webp");
   -webkit-mask-size: var(--st-nav-px) var(--st-nav-px);
   -webkit-mask-repeat: no-repeat;
@@ -171,16 +171,48 @@ nav.storyteller-nav.tabs {
   transition: opacity 0.3s ease-in-out;
 }
 
+.window-app.story-sheet .storyteller-loading-screen {
+  flex-direction: column;
+  gap: 1.2vh;
+}
+
+/* No box: the text and the bar carry a shadow in the color that contrasts with the text */
 .window-app.story-sheet .storyteller-loading-screen h1 {
   font-family: "Kurale", serif;
   font-size: 5vh;
+  margin: 0;
   color: var(--st-book-color, var(--st-book-default-color, #48392e));
-  background: rgba(255, 250, 240, 0.6);
-  padding: 10px 40px;
-  border-radius: 4px;
-  border: 1px solid rgba(72, 57, 46, 0.4);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  text-shadow:
+    0 0 4px var(--st-contrast, #fff),
+    0 0 10px var(--st-contrast, #fff),
+    0 1px 2px var(--st-contrast, #fff);
+}
+
+.window-app.story-sheet .st-progress {
+  width: 40%;
+  height: 1.6vh;
+  box-sizing: border-box;
+  border: 2px solid var(--st-book-color, var(--st-book-default-color, #48392e));
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 0 6px var(--st-contrast, #fff), inset 0 0 4px var(--st-contrast, #fff);
+}
+
+.window-app.story-sheet .st-progress-bar {
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--st-book-color, var(--st-book-default-color, #48392e));
+  transition: width 0.15s ease-out;
+}
+
+.window-app.story-sheet .st-progress-text {
+  font-family: "Kurale", serif;
+  font-size: 2.4vh;
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
+  text-shadow:
+    0 0 4px var(--st-contrast, #fff),
+    0 0 8px var(--st-contrast, #fff);
 }
 
 .window-app.story-sheet.storyteller2-loading .storyteller-loading-screen {
@@ -394,7 +426,8 @@ nav.storyteller-nav.tabs {
 .story-sheet .page-num.num-start .create {
   flex: 0 0 auto;
   background: rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-border-light-tertiary);
+  border: 1px solid var(--st-book-color, var(--st-book-default-color, #48392e));
+  color: var(--st-book-color, var(--st-book-default-color, #48392e));
 }
 
 .story-sheet.scrollable .page-num.num-start,

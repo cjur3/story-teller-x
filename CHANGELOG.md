@@ -13,12 +13,16 @@ All notable changes to this module are documented here. The format follows
 - New CC0 book assets (covers and pages in several colors) by yd, see `img/book/LICENSE.md`.
 
 ### Changed
-- Book settings: choose the cover color (brown, brown with seam, black, blood red, khaki) and page color (beige, white, black), and the text color. Black pages default to blood red text.
+- The loading screen shows a rounded progress bar with a percentage while the chapters are split into pages, and no longer has a background box: text and bar carry a shadow that contrasts with the text color.
+- "Add Chapter" and the page turn arrows use the text color of the book.
+- The book opens with a blank left page next to the table of contents, like a real book, and ends with a blank page if needed. The contents are an ordinary page now, not a hard cover.
+- Book settings: choose the cover color (brown, brown with seam, black, blood red, khaki) and page color (beige, white, black), and the text color. Black pages default to bright grey text.
 - The release is now built when a tag is pushed, and the release notes come from this changelog.
 - The book uses the new cover and page images.
 - Showcase screenshots moved from `.github/` to `img/git/`.
 
 ### Fixed
+- The table of contents page (and the back cover) no longer sit a few pixels off from the chapter pages: hard pages ignored the vertical offset of the page-flip library.
 - A chapter whose title is followed by a picture taller than the rest of the page no longer starts on the next page: the picture shrinks to fit below the title.
 - The "Add Chapter" button no longer overlaps the page turn arrows.
 - Turning a page no longer clips the page or flashes a scrollbar.

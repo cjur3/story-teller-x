@@ -13,7 +13,7 @@ export const DEFAULT_PAGE = "beige";
 export const PAGE_FONT_COLORS = {
   beige: "#48392e",
   white: "#48392e",
-  black: "#9e0b0f", // blood red
+  black: "#d4d4d4", // bright grey
 };
 
 export function defaultFontColor(pageColor) {
@@ -34,6 +34,14 @@ export function skinSelectHtml(group, name, current) {
   return `<select name="${name}">${options.join("")}</select>`;
 }
 
+/** Black or white, whichever stands out from the hex color `color` (for text shadows). */
+export function contrastColor(color) {
+  const hex = /^#([0-9a-f]{6})$/i.exec(color ?? "")?.[1];
+  if (!hex) return "#ffffff";
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5 ? "#000000" : "#ffffff";
+}
+
 /** Apply the skin of a book to a sheet element. */
 export function applySkin(element, { coverColor, pageColor, fontColor }) {
   for (const cls of [...element.classList]) {
@@ -43,4 +51,6 @@ export function applySkin(element, { coverColor, pageColor, fontColor }) {
   element.classList.add(`st-page-color-${PAGE_COLORS.includes(pageColor) ? pageColor : DEFAULT_PAGE}`);
   if (fontColor) element.style.setProperty("--st-book-color", fontColor);
   else element.style.removeProperty("--st-book-color");
+  // text shadow color that stands out from the text (loader, ...)
+  element.style.setProperty("--st-contrast", contrastColor(fontColor || defaultFontColor(pageColor)));
 }

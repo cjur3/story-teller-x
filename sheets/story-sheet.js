@@ -256,6 +256,7 @@ export class StorySheet extends JournalSheet {
 
     this.addChapterButtons();
     this.applyChapterFilters();
+    this.addBlankLeaves();
 
     // Splitting changes the number of leaves, so only now is the position known
     const leafCount = this.element[0].querySelectorAll(".pages > .page-num").length;
@@ -335,12 +336,26 @@ export class StorySheet extends JournalSheet {
       }
     });
 
+    this.setLoadProgress(1);
+
     // Failsafe: Ensure loading mask is removed after initial render
     const elapsed = Date.now() - renderStart;
     const remaining = Math.max(150, 2000 - elapsed);
     setTimeout(() => {
         this.element[0].classList.remove("storyteller2-loading");
     }, remaining);
+  }
+
+  /** Move the progress bar of the loading screen (0..1). */
+  setLoadProgress(fraction) {
+    const root = this.element?.[0];
+    if (!root) return;
+    const percent = Math.round(Math.max(0, Math.min(1, fraction)) * 100);
+    const bar = root.querySelector(".st-progress-bar");
+    if (bar) bar.style.width = `${percent}%`;
+    const text = root.querySelector(".st-progress-text");
+    if (text) text.textContent = `${percent}%`;
+    root.querySelector(".st-progress")?.setAttribute("aria-valuenow", String(percent));
   }
 
   /**
@@ -356,6 +371,7 @@ export class StorySheet extends JournalSheet {
     const root = this.element[0];
     const pagesEl = root.querySelector(".pages");
     const host = root.querySelector(".journal-entry-pages");
+    this.setLoadProgress(0.02);
     const leafSize = { width: host.offsetWidth / 2, height: host.offsetHeight };
 
     let area;
@@ -375,18 +391,29 @@ export class StorySheet extends JournalSheet {
         return true;
       }
 
-      const leaves = [...pagesEl.querySelectorAll(":scope > .page-num:not(.num-start)")];
-      for (const leaf of leaves) {
-        if (!leaf.querySelector(":scope > article.journal-entry-page.text")) continue;
-        const html = getLeafSourceHtml(leaf);
-        if (html === null) continue;
+      // The chapters are the bulk of the work: share the progress bar between them by text size
+      const jobs = [...pagesEl.querySelectorAll(":scope > .page-num:not(.num-start)")]
+        .filter((leaf) => leaf.querySelector(":scope > article.journal-entry-page.text"))
+        .map((leaf) => ({ leaf, html: getLeafSourceHtml(leaf) }))
+        .filter((job) => job.html !== null);
+      const totalSize = jobs.reduce((sum, job) => sum + Math.max(1, job.html.length), 0);
+      const CHAPTERS = { from: 0.05, to: 0.92 };
+      let doneSize = 0;
+      for (const { leaf, html } of jobs) {
+        const size = Math.max(1, html.length);
+        const report = (fraction) =>
+          this.setLoadProgress(CHAPTERS.from + ((doneSize + fraction * size) / totalSize) * (CHAPTERS.to - CHAPTERS.from));
         // sizes first: an image taller than a page would overflow into the margin
         const sizes = await preloadImages(html, abort.signal);
+        report(0.05);
         const fitted = fitMedia(html, area.imageMax, sizes, { autoFloat });
         const pages = await paginate(fitted, area, {
           signal: abort.signal,
+          onProgress: (fraction) => report(0.05 + fraction * 0.95),
         });
         if (pages.length > 0) buildChapterLeaves(leaf, pages);
+        doneSize += size;
+        report(0);
       }
     } catch (error) {
       if (error?.name === "AbortError") return false;
@@ -396,6 +423,7 @@ export class StorySheet extends JournalSheet {
       if (this._splitAbort === abort) this._splitAbort = null;
     }
 
+    this.setLoadProgress(0.94);
     // The table of contents may need several pages; headings go in first so they count.
     const tocLeaf = pagesEl.querySelector(":scope > .page-num.num-start");
     if (tocHeadings) buildTocHeadings(tocLeaf, collectChapterHeadings(pagesEl));
@@ -508,6 +536,24 @@ export class StorySheet extends JournalSheet {
     await setChapterOptions(page, values);
   }
 
+  /**
+   * A blank left page in front of the table of contents, so the book opens like a real
+   * one (blank page | contents) and the contents are an ordinary page. A blank page at
+   * the end keeps the last spread complete. Left pages are the odd children, see
+   * css/book-skins.css.
+   */
+  addBlankLeaves() {
+    const pagesEl = this.element[0].querySelector(".pages");
+    pagesEl.querySelectorAll(":scope > .page-num.st-blank").forEach((el) => el.remove());
+    const blank = () => {
+      const leaf = document.createElement("div");
+      leaf.className = "page-num st-blank";
+      return leaf;
+    };
+    pagesEl.prepend(blank());
+    if (pagesEl.querySelectorAll(":scope > .page-num").length % 2 === 1) pagesEl.append(blank());
+  }
+
   /** Mark the book pages of chapters with a page filter (see css/book-skins.css). */
   applyChapterFilters() {
     for (const leaf of this.element[0].querySelectorAll(".pages > .page-num:not(.num-start)")) {
@@ -554,7 +600,7 @@ export class StorySheet extends JournalSheet {
       useMouseEvents: false,
       showPageCorners: false,
       maxShadowOpacity: 0.9, // Half shadow intensity
-      showCover: true,
+      showCover: false, // the blank page in front of the contents takes the cover's place
       clickEventClasses: [
         "editor-edit",
         "st-edit-page",

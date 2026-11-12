@@ -334,6 +334,10 @@ class HTMLPage extends Page {
     }
     drawHard(commonStyle = '') {
         const pos = this.render.getRect().left + this.render.getRect().width / 2;
+        // Story Teller X: soft pages are moved down by the rect's top (see drawSoft); hard
+        // pages (the table of contents) ignored it and sat a few pixels off when the block
+        // and the page differ in height
+        const top = this.render.getRect().top;
         const angle = this.state.hardDrawingAngle;
         const newStyle = commonStyle +
             `
@@ -344,9 +348,9 @@ class HTMLPage extends Page {
             ` +
             (this.orientation === 0 /* PageOrientation.LEFT */
                 ? `transform-origin: ${this.render.getRect().pageWidth}px 0; 
-                   transform: translate3d(0, 0, 0) rotateY(${angle}deg);`
+                   transform: translate3d(0, ${top}px, 0) rotateY(${angle}deg);`
                 : `transform-origin: 0 0; 
-                   transform: translate3d(${pos}px, 0, 0) rotateY(${angle}deg);`);
+                   transform: translate3d(${pos}px, ${top}px, 0) rotateY(${angle}deg);`);
         this.element.style.cssText = newStyle;
     }
     drawSoft(position, commonStyle = '') {

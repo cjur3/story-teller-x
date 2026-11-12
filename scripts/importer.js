@@ -63,7 +63,7 @@ export class StoryImporterDialog {
         this.sheetType = field('sheetType')?.value ?? 'story';
         this.coverColor = field('coverColor')?.value ?? DEFAULT_COVER;
         this.pageColor = field('pageColor')?.value ?? DEFAULT_PAGE;
-        // "" = the default of the page color (blood red on black pages)
+        // "" = the default of the page color (bright grey on black pages)
         this.fontColor = field('fontColorDefault')?.checked ? '' : (field('fontColor')?.value ?? '');
 
         const file = fileInput.files[0];

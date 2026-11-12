@@ -95,6 +95,8 @@ export function yieldToMainThread() {
  * @param {number} [options.tolerance=0.5]  px of rounding slack
  * @param {number} [options.maxPages=5000]  safety limit
  * @param {number} [options.yieldAfterMs=12] time slice before yielding to the UI
+ * @param {(fraction: number) => void} [options.onProgress]
+ *        called after every page with the share (0..1) of the text placed so far
  * @param {(container: HTMLElement) => number} [options.measure]
  *        height of the container; override for tests
  * @yields {string} inner HTML of each page
@@ -109,6 +111,7 @@ export async function* splitHtmlToPages(html, options) {
     maxPages = 5000,
     yieldAfterMs = 12,
     measure = defaultMeasure,
+    onProgress,
   } = options;
 
   const doc = container.ownerDocument;
@@ -316,12 +319,16 @@ export async function* splitHtmlToPages(html, options) {
     source.insertBefore(last, source.firstChild);
   }
 
+  const totalText = Math.max(1, source.textContent.length);
+  let placedText = 0;
   let pageCount = 0;
   try {
     while (source.firstChild) {
       const exhausted = await fill(source, container);
       if (!exhausted) pullBackTrailingHeading();
       if (hasContent(container)) {
+        placedText += container.textContent.length;
+        onProgress?.(Math.min(1, placedText / totalText));
         yield container.innerHTML;
         pageCount++;
       }
