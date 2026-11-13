@@ -192,6 +192,7 @@ export class StorySheet extends JournalSheet {
 
   /** @inheritdoc */
   async _render(force, options = {}) {
+    if (this._closing && !options.__reopen) this._closing = false; // explicit re-open of a closed sheet
     const renderStart = Date.now();
     this._renderCount = (this._renderCount ?? 0) + 1;
     this._lastRenderAt = Date.now();
@@ -234,7 +235,15 @@ export class StorySheet extends JournalSheet {
     let savedPage = getPage(data._id) ?? 0;
 
     if (autoSplit) {
-      const completed = await this.splitIntoLeaves(pageNumbers);
+      let completed;
+      try {
+        completed = await this.splitIntoLeaves(pageNumbers);
+      } catch (error) {
+        // e.g. another module (Polyglot) changed the page content: show the book unsplit
+        // instead of leaving the loading screen up forever
+        console.error("Story Teller X | splitting pages failed, showing the book unsplit", error);
+        completed = true;
+      }
       // A newer render replaced this one while splitting; it will finish the job.
       if (!completed) return;
     }
@@ -370,7 +379,10 @@ export class StorySheet extends JournalSheet {
    */
   reloadUnlessRendered(renderCount) {
     clearTimeout(this._reloadTimer);
+    if (this._closing) return;
     this._reloadTimer = setTimeout(() => {
+      // closed or replaced by another sheet (sheet class switched) in the meantime
+      if (this._closing || this.object?._sheet !== this) return;
       // a render that started just before the change already shows it
       const justRendered = Date.now() - (this._lastRenderAt ?? 0) < 400;
       if ((this._renderCount ?? 0) === renderCount && !justRendered) this.render(true);
@@ -693,6 +705,7 @@ export class StorySheet extends JournalSheet {
   /** @inheritdoc */
   async close(options = {}) {
     let el = this.element;
+    this._closing = true;
     clearTimeout(this._reloadTimer);
     this.stopBook();
     super.close(options);
